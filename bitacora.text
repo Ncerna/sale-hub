@@ -1,0 +1,73 @@
+app/
+├── Domain/
+│   ├── Entity/
+│   │   └── Product.php
+│   ├── IRepository/
+│   │   └── IProductRepository.php
+│   └── ValueObject/
+│       └── Money.php
+│
+├── Application/
+│   └── UseCase/
+│       └── CreateProductUseCase.php
+│
+├── Infrastructure/
+│   ├── Persistence/
+│   │   └── EloquentProductRepository.php
+│   └── Framework/
+│       ├── Controller/
+│       │   └── ProductController.php
+│       └── Router.php
+routes/
+└── api.php
+database/
+└── migrations/
+    └── 2025_08_20_000000_create_products_table.php
+
+    https://www.perplexity.ai/search/si-esto-funciono-porque-model-Ajl4zN2qSN6ZUWelUDAd0g
+
+
+ANTERIOR
+
+composer create-project laravel/laravel saleHub
+cd saleHub
+https://www.perplexity.ai/search/mira-una-consulta-en-laravel-e-Nn0zzwbbRW6NrU1PY4ET8w
+
+-------------------------------------------
+
+saleHub/
+├── app/
+│   ├── Domain/                             # Capa de dominio (lógica de negocio)
+│   │   ├── Entity/                        # Entidades de negocio (Sale.php, User.php, etc.)
+│   │   ├── IRepository/                   # Interfaces de repositorios (ISaleRepository.php)
+│   │   ├── IService/                      # Interfaces de servicios de dominio (IPaymentService.php)
+│   │   └── ValueObject/                   # Objetos de valor (Money.php)
+│   │
+│   ├── Application/                       # Capa de aplicación (casos de uso)
+│   │   ├── UseCase/                      # Casos de uso (CreateSaleUseCase.php)
+│   │   ├── Service/                      # Servicios de aplicación (SaleService.php)
+│   │   ├── DTO/                         # Objetos de transferencia de datos (SaleDTO.php)
+│   │   └── Command/                     # Comandos (acciones o peticiones)
+│   │
+│   ├── Infrastructure/                   # Capa de infraestructura (implementaciones técnicas)
+│   │   ├── Persistence/                 # Repositorios concretos (SaleRepository.php)
+│   │   ├── ApiClients/                  # Clientes externos (para APIs, etc.)
+│   │   ├── ServiceImplementations/     # Implementaciones concretas de servicios
+│   │   ├── Connections/                 # Gestión de conexiones genéricas (IDatabaseConnection y sus implementaciones)
+│   │   └── Framework/                  # Adaptadores Laravel (Controladores, Middleware, Factories)
+│   │       ├── Controller/             
+│   │       ├── Middleware/             
+│   │       ├── Adapters/               
+│   │       └── Factories/              
+│   │
+├── config/                             # Configuraciones (database, app, etc.)
+├── public/                             # Entradas públicas web
+├── routes/                             # Definición de rutas (web.php, api.php)
+├── storage/                            # Archivos temporales, logs, cache
+├── tests/                             # Pruebas unitarias y funcionales
+│   ├── Domain/
+│   ├── Application/
+│   └── Infrastructure/
+├── vendor/                            # Librerías gestionadas por Composer
+├── .env                              # Variables de entorno (no subir a repositorio)
+├── composer.json                     # Dependencias del proyecto
