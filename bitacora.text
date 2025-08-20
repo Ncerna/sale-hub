@@ -39,18 +39,18 @@ saleHub/
 ├── app/
 │   ├── Domain/                             # Capa de dominio (lógica de negocio)
 │   │   ├── Entity/                        # Entidades de negocio (Sale.php, User.php, etc.)
-│   │   ├── IRepository/                   # Interfaces de repositorios (ISaleRepository.php)
-│   │   ├── IService/                      # Interfaces de servicios de dominio (IPaymentService.php)
-│   │   └── ValueObject/                   # Objetos de valor (Money.php)
+│   │   ├── IRepository/                   # Interfaces de repositorios ()
+│   │   ├── IService/                      # Interfaces de servicios de dominio ()
+│   │   └── ValueObject/                   # Objetos de valor ()
 │   │
-│   ├── Application/                       # Capa de aplicación (casos de uso)
-│   │   ├── UseCase/                      # Casos de uso (CreateSaleUseCase.php)
-│   │   ├── Service/                      # Servicios de aplicación (SaleService.php)
-│   │   ├── DTO/                         # Objetos de transferencia de datos (SaleDTO.php)
+│   ├── Application/                       # Capa de aplicación ()
+│   │   ├── UseCase/                      # Casos de uso ()
+│   │   ├── Service/                      # Servicios de aplicación ()
+│   │   ├── DTO/                         # Objetos de transferencia de datos ()
 │   │   └── Command/                     # Comandos (acciones o peticiones)
 │   │
 │   ├── Infrastructure/                   # Capa de infraestructura (implementaciones técnicas)
-│   │   ├── Persistence/                 # Repositorios concretos (SaleRepository.php)
+│   │   ├── Persistence/                 # Repositorios concretos (.)
 │   │   ├── ApiClients/                  # Clientes externos (para APIs, etc.)
 │   │   ├── ServiceImplementations/     # Implementaciones concretas de servicios
 │   │   ├── Connections/                 # Gestión de conexiones genéricas (IDatabaseConnection y sus implementaciones)
@@ -71,3 +71,26 @@ saleHub/
 ├── vendor/                            # Librerías gestionadas por Composer
 ├── .env                              # Variables de entorno (no subir a repositorio)
 ├── composer.json                     # Dependencias del proyecto
+
+
+{
+    "family_id": 1,
+    "name": "Beverages",
+    "photo": "http://example.com/images/beverages.jpg",
+    "description": "All kinds of drinks",
+    "status": 1,
+    "attributes": [
+        {
+            "name": "expiration_date",
+            "data_type": "date",
+            "required": true,
+            "status": 1
+        },
+        {
+            "name": "volume",
+            "data_type": "string",
+            "required": false,
+            "status": 1
+        }
+    ]
+}
