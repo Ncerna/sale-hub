@@ -73,24 +73,5 @@ saleHub/
 ├── composer.json                     # Dependencias del proyecto
 
 
-{
-    "family_id": 1,
-    "name": "Beverages",
-    "photo": "http://example.com/images/beverages.jpg",
-    "description": "All kinds of drinks",
-    "status": 1,
-    "attributes": [
-        {
-            "name": "expiration_date",
-            "data_type": "date",
-            "required": true,
-            "status": 1
-        },
-        {
-            "name": "volume",
-            "data_type": "string",
-            "required": false,
-            "status": 1
-        }
-    ]
-}
+
+https://www.perplexity.ai/search/que-arquitectur-es-esto-en-aqi-6nRnq3NER9WCEC2asNlUqw

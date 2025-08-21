@@ -66,4 +66,7 @@ class CategoryRepository implements ICategoryRepository
     {
         EloquentCategory::destroy($id);
     }
+     public function findAllPaginated(int $page, int $size, ?string $search): array{
+        return [];
+     }
 }
