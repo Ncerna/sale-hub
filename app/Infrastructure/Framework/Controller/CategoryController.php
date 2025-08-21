@@ -3,14 +3,14 @@ namespace App\Infrastructure\Framework\Controller;
 
 use App\Application\DTO\CategoryDTO;
 use App\Application\DTO\CategoryAttributeDTO;
-use App\Application\UseCase\CreateCategory;
+use App\Application\UseCase\CreateCategoryUseCase;
 use Illuminate\Http\Request;
 
 class CategoryController
 {
-    private CreateCategory $createCategoryUseCase;
+    private CreateCategoryUseCase $createCategoryUseCase;
 
-    public function __construct(CreateCategory $createCategoryUseCase)
+    public function __construct(CreateCategoryUseCase $createCategoryUseCase)
     {
         $this->createCategoryUseCase = $createCategoryUseCase;
     }

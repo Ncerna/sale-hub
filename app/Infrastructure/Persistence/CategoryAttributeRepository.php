@@ -2,10 +2,10 @@
 namespace App\Infrastructure\Persistence;
 
 use App\Domain\Entity\CategoryAttribute;
-use App\Domain\IRepository\CategoryAttributeRepositoryInterface;
+use App\Domain\IRepository\ICategoryAttributeRepository;
 use App\Models\EloquentCategoryAttribute;
 
-class CategoryAttributeRepository implements CategoryAttributeRepositoryInterface
+class CategoryAttributeRepository implements ICategoryAttributeRepository
 {
     public function save(CategoryAttribute $attribute): void
     {

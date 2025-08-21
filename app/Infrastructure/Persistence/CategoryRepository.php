@@ -2,10 +2,10 @@
 namespace App\Infrastructure\Persistence;
 
 use App\Domain\Entity\Category;
-use App\Domain\IRepository\CategoryRepositoryInterface;
+use App\Domain\IRepository\ICategoryRepository;
 use App\Models\EloquentCategory;
 
-class CategoryRepository implements CategoryRepositoryInterface
+class CategoryRepository implements ICategoryRepository
 {
     public function save(Category $category): void
     {

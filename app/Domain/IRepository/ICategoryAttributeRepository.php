@@ -3,7 +3,7 @@ namespace App\Domain\IRepository;
 
 use App\Domain\Entity\CategoryAttribute;
 
-interface CategoryAttributeRepositoryInterface
+interface ICategoryAttributeRepository
 {
     public function save(CategoryAttribute $attribute): void;
     public function findById(int $id): ?CategoryAttribute;

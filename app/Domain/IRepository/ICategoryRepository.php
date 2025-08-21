@@ -3,7 +3,7 @@ namespace App\Domain\IRepository;
 
 use App\Domain\Entity\Category;
 
-interface CategoryRepositoryInterface
+interface ICategoryRepository
 {
     public function save(Category $category): void;
     public function findById(int $id): ?Category;

@@ -5,17 +5,17 @@ namespace App\Application\UseCase;
 use App\Application\DTO\CategoryDTO;
 use App\Domain\Entity\Category;
 use App\Domain\Entity\CategoryAttribute;
-use App\Domain\IRepository\CategoryRepositoryInterface;
-use App\Domain\IRepository\CategoryAttributeRepositoryInterface;
+use App\Domain\IRepository\ICategoryRepository;
+use App\Domain\IRepository\ICategoryAttributeRepository;
 
 class CreateCategoryUseCase
 {
-    private CategoryRepositoryInterface $categoryRepository;
-    private CategoryAttributeRepositoryInterface $attributeRepository;
+    private ICategoryRepository $categoryRepository;
+    private ICategoryAttributeRepository $attributeRepository;
 
     public function __construct(
-        CategoryRepositoryInterface $categoryRepository,
-        CategoryAttributeRepositoryInterface $attributeRepository
+        ICategoryRepository $categoryRepository,
+        ICategoryAttributeRepository $attributeRepository
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->attributeRepository = $attributeRepository;
