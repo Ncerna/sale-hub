@@ -1,4 +1,41 @@
 <?php
+
+namespace Application\UseCase;
+
+use Domain\Entity\Product1;
+use Domain\ValueObject\Price;
+use Domain\ValueObject\IGVRate;
+use Domain\IRepository\IProductRepository1;
+use Application\Command\CreateProductCommand1;
+
+/*class CreateProductUseCase1
+{
+    private IProductRepository1 $productRepository;
+
+    public function __construct(IProductRepository1 $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    public function execute(CreateProductCommand1 $command): void
+    {
+        $price = new Price($command->basePrice, new IGVRate($command->igvRate));
+        $product = new Product1(
+            uniqid(), // o algún generador de id
+            $command->name,
+            $command->code,
+            $price,
+            new IGVRate($command->igvRate),
+            // ...otros valores por defecto o parámetros
+            $command->stock,
+            0 // mínimo stock por ejemplo
+        );
+
+        $this->productRepository->save($product);
+    }
+}
+*/
+
 namespace Application\UseCase;
 
 use Domain\IRepository\IProductRepository1;
@@ -36,15 +73,6 @@ class CreateProductUseCase
 
         $this->productRepository->save($product);
 
-        return new ProductDTO1([
-            'id' => $product->getId(),
-            'name' => $product->getName(),
-            'code' => $product->getCode(),
-            'unit_price' => $product->getUnitPrice()->getBasePrice(),
-            'igv_rate' => $product->getIgvRate()->getRate(),
-            'igv_affectation_code' => $product->getIgvAffectationCode()->getCode(),
-            'stock' => $product->getStock(),
-            'minimum_stock' => $product->getMinimumStock(),
-        ]);
+        
     }
 }

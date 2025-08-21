@@ -12,7 +12,7 @@ class ProductDTO1
     public int $stock;
     public int $minimum_stock;
 
-    public function __construct(array $data)
+   /* public function __construct(array $data)
     {
         $this->id = $data['id'] ?? '';
         $this->name = $data['name'];
@@ -22,6 +22,14 @@ class ProductDTO1
         $this->igv_affectation_code = $data['igv_affectation_code'];
         $this->stock = $data['stock'];
         $this->minimum_stock = $data['minimum_stock'];
+    }*/
+    public function __construct(string $id, string $name, string $code, float $priceWithIGV, int $stock)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->code = $code;
+        $this->priceWithIGV = $priceWithIGV;
+        $this->stock = $stock;
     }
     
     public function getId(): string {

@@ -105,6 +105,12 @@ class Product1
     {
         return $this->unit_price->getPriceWithIGV();
     }
+    public function getStockValue(): float
+    {
+        return $this->stock * $this->unit_price->getBasePrice();
+    }
+    
+
 
     // ===== Setters =====
 

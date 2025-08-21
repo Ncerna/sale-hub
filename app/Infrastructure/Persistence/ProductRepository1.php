@@ -9,7 +9,7 @@ use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
 use App\Models\Product1 as EloquentProduct; // Modelo Eloquent de Laravel
 
-class ProductRepository1 implements IProductRepository1
+class ProductRepository1 implements IProductRepository
 {
     public function findById(string $id): ?Product1
     {
