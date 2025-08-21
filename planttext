@@ -1,0 +1,817 @@
+@startuml
+
+package "Domain" {
+  class Sale
+  class User
+  interface ISaleRepository
+  interface ISaleValidationService
+  class Money
+  class Address
+}
+
+package "Application" {
+  class RegisterSaleUseCase
+  class SaleApplicationService
+  class SaleDTO
+  class CreateSaleCommand
+}
+
+package "Infrastructure" {
+  class SaleRepositoryDatabase
+  class PaymentGatewayClient
+  class SaleValidationServiceImplementation
+  class SaleController
+  class AuthenticationMiddleware
+  class LoggerAdapter
+  class ServiceFactory
+}
+
+'SaleApplicationService usa RegisterSaleUseCase
+SaleApplicationService --> RegisterSaleUseCase
+
+'RegisterSaleUseCase usa Sale e interfaces de dominio
+RegisterSaleUseCase --> Sale
+RegisterSaleUseCase ..|> ISaleRepository
+RegisterSaleUseCase ..|> ISaleValidationService
+
+'SaleController usa SaleApplicationService
+SaleController --> SaleApplicationService
+
+'SaleRepositoryDatabase implementa ISaleRepository
+SaleRepositoryDatabase ..|> ISaleRepository
+
+'SaleValidationServiceImplementation implementa ISaleValidationService
+SaleValidationServiceImplementation ..|> ISaleValidationService
+
+'ServiceFactory crea SaleController e inyecta dependencias
+ServiceFactory --> SaleController
+
+@enduml
+
+
+-------------------------------------------
+
+
+Ejemplo: Sistema de Gestión de Ventas
+1. Capa Domain (Dominio - lógica de negocio)
+Entity/
+Clase: Sale (representa una venta con atributos como fecha, monto, items)
+Clase: User (representa el usuario que realiza la venta)
+
+IRepository/
+Interface: ISaleRepository (métodos para guardar, buscar ventas sin implementación concreta)
+Interface: IUserRepository
+
+IService/
+Interface: ISaleValidationService (contrato para validar reglas de negocio sobre ventas)
+
+ValueObject/
+Clase: Money (objeto valor para manejo preciso de montos monetarios)
+Clase: Address (valor para dirección de usuario o cliente)
+
+2. Capa Application (Aplicación - orquestación de casos de uso)
+UseCase/
+Clase: RegisterSaleUseCase (lógica para registrar una venta, usa repositorios y servicios de dominio)
+
+Service/
+Clase: SaleApplicationService (servicios que exponen operaciones de ventas para UI o API)
+
+DTO/
+Clase: SaleDTO (estructura de datos para transferencia fácil entre capas y sobre la red)
+
+Command/
+Clase: CreateSaleCommand (representa la acción o petición de crear una venta, con datos necesarios)
+
+3. Capa Infrastructure (Infraestructura - implementaciones técnicas)
+Persistence/
+Clase: SaleRepositoryDatabase (implementa ISaleRepository para guardar en MySQL)
+
+ApiClients/
+Clase: PaymentGatewayClient (cliente para interactuar con API de pasarela de pagos)
+
+ServiceImplementations/
+Clase: SaleValidationServiceImplementation (implementación concreta de validación)
+
+Connections/
+Clase: MySQLConnection (gestiona la conexión a la base de datos y su configuración)
+
+Framework/
+
+Controller/
+Clase: SaleController (API REST, recibe peticiones de creación de venta)
+
+Middleware/
+Clase: AuthenticationMiddleware (valida token de usuario antes de procesar)
+
+Adapters/
+Clase: LoggerAdapter (adaptador que implementa logging con librería externa)
+
+Factories/
+Clase: ServiceFactory (crea instancias de servicios e inyecta dependencias)
+
+------------------------------------------------------------------------------------------------
+
+
+<?php
+// =========================
+// 1. Domain/Entity/Sale.php
+// =========================
+class Sale {
+    private float $amount;
+    private string $date;
+
+    public function __construct(float $amount, string $date) {
+        $this->amount = $amount;
+        $this->date = $date;
+    }
+
+    public function getAmount(): float {
+        return $this->amount;
+    }
+
+    public function getDate(): string {
+        return $this->date;
+    }
+}
+
+// ===========================
+// 1. Domain/Entity/User.php
+// ===========================
+class User {
+    private string $username;
+    private string $email;
+    private Address $address;
+
+    public function __construct(string $username, string $email, Address $address) {
+        $this->username = $username;
+        $this->email = $email;
+        $this->address = $address;
+    }
+
+    public function getUsername(): string {
+        return $this->username;
+    }
+
+    public function getEmail(): string {
+        return $this->email;
+    }
+
+    public function getAddress(): Address {
+        return $this->address;
+    }
+}
+
+// ===========================
+// 1. Domain/ValueObject/Money.php
+// ===========================
+class Money {
+    private float $amount;
+    private string $currency;
+
+    public function __construct(float $amount, string $currency = 'USD') {
+        $this->amount = $amount;
+        $this->currency = $currency;
+    }
+
+    public function getAmount(): float {
+        return $this->amount;
+    }
+
+    public function getCurrency(): string {
+        return $this->currency;
+    }
+}
+
+// ============================
+// 1. Domain/ValueObject/Address.php
+// ============================
+class Address {
+    private string $street;
+    private string $city;
+    private string $country;
+
+    public function __construct(string $street, string $city, string $country) {
+        $this->street = $street;
+        $this->city = $city;
+        $this->country = $country;
+    }
+
+    public function getFullAddress(): string {
+        return "{$this->street}, {$this->city}, {$this->country}";
+    }
+}
+
+// ===============================
+// 1. Domain/IRepository/ISaleRepository.php
+// ===============================
+interface ISaleRepository {
+    public function save(Sale $sale): void;
+    public function findById(int $id): ?Sale;
+}
+
+// ===============================
+// 1. Domain/IRepository/IUserRepository.php
+// ===============================
+interface IUserRepository {
+    public function save(User $user): void;
+    public function findByUsername(string $username): ?User;
+}
+
+// ===============================
+// 1. Domain/IService/ISaleValidationService.php
+// ===============================
+interface ISaleValidationService {
+    public function validate(Sale $sale): bool;
+}
+
+// ============================
+// 2. Application/UseCase/RegisterSaleUseCase.php
+// ============================
+class RegisterSaleUseCase {
+    private ISaleRepository $saleRepository;
+    private ISaleValidationService $validationService;
+
+    public function __construct(ISaleRepository $saleRepository, ISaleValidationService $validationService) {
+        $this->saleRepository = $saleRepository;
+        $this->validationService = $validationService;
+    }
+
+    public function execute(Sale $sale): void {
+        if ($this->validationService->validate($sale)) {
+            $this->saleRepository->save($sale);
+        } else {
+            throw new Exception("Sale validation failed.");
+        }
+    }
+}
+
+// =============================
+// 2. Application/Service/SaleApplicationService.php
+// =============================
+class SaleApplicationService {
+    private RegisterSaleUseCase $registerSaleUseCase;
+
+    public function __construct(RegisterSaleUseCase $registerSaleUseCase) {
+        $this->registerSaleUseCase = $registerSaleUseCase;
+    }
+
+    public function registerSale(float $amount, string $date): void {
+        $sale = new Sale($amount, $date);
+        $this->registerSaleUseCase->execute($sale);
+    }
+}
+
+// ==========================
+// 2. Application/DTO/SaleDTO.php
+// ==========================
+class SaleDTO {
+    public float $amount;
+    public string $date;
+
+    public function __construct(array $data) {
+        $this->amount = $data['amount'];
+        $this->date = $data['date'];
+    }
+}
+
+// ==============================
+// 2. Application/Command/CreateSaleCommand.php
+// ==============================
+class CreateSaleCommand {
+    public SaleDTO $saleDTO;
+
+    public function __construct(SaleDTO $saleDTO) {
+        $this->saleDTO = $saleDTO;
+    }
+}
+
+// ====================================
+// 3. Infrastructure/Persistence/SaleRepositoryDatabase.php
+// ====================================
+class SaleRepositoryDatabase implements ISaleRepository {
+    private PDO $pdo;
+
+    public function __construct(PDO $pdo) {
+        $this->pdo = $pdo;
+    }
+
+    public function save(Sale $sale): void {
+        $stmt = $this->pdo->prepare('INSERT INTO sales (amount, date) VALUES (:amount, :date)');
+        $stmt->execute([
+            'amount' => $sale->getAmount(),
+            'date' => $sale->getDate()
+        ]);
+    }
+
+    public function findById(int $id): ?Sale {
+        $stmt = $this->pdo->prepare('SELECT * FROM sales WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return null;
+        return new Sale((float)$row['amount'], $row['date']);
+    }
+}
+
+// ================================
+// 3. Infrastructure/ApiClients/PaymentGatewayClient.php
+// ================================
+class PaymentGatewayClient {
+    public function charge(float $amount): bool {
+        // Simulate external API call
+        return $amount > 0;
+    }
+}
+
+// ==========================================
+// 3. Infrastructure/ServiceImplementations/SaleValidationServiceImplementation.php
+// ==========================================
+class SaleValidationServiceImplementation implements ISaleValidationService {
+    public function validate(Sale $sale): bool {
+        return $sale->getAmount() > 0;
+    }
+}
+
+// =============================
+// 3. Infrastructure/Connections/MySQLConnection.php
+// =============================
+class MySQLConnection {
+    private static ?PDO $pdo = null;
+
+    public static function getConnection(): PDO {
+        if (self::$pdo === null) {
+            self::$pdo = new PDO('sqlite::memory:'); // usa SQLite en memoria para ejemplo
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // Creación de tabla para ejemplo
+            self::$pdo->exec("CREATE TABLE sales (id INTEGER PRIMARY KEY AUTOINCREMENT, amount REAL, date TEXT)");
+        }
+        return self::$pdo;
+    }
+}
+
+// =========================================
+// 3. Infrastructure/Framework/Controller/SaleController.php
+// =========================================
+class SaleController {
+    private SaleApplicationService $saleService;
+
+    public function __construct(SaleApplicationService $saleService) {
+        $this->saleService = $saleService;
+    }
+
+    public function createSale(array $requestData): void {
+        $dto = new SaleDTO($requestData);
+        $command = new CreateSaleCommand($dto);
+        $this->saleService->registerSale($command->saleDTO->amount, $command->saleDTO->date);
+        echo "Sale created successfully.\n";
+    }
+}
+
+// ====================================
+// 3. Infrastructure/Framework/Middleware/AuthenticationMiddleware.php
+// ====================================
+class AuthenticationMiddleware {
+    public function handle(): bool {
+        // Simula la validación de token
+        return true;
+    }
+}
+
+// ====================================
+// 3. Infrastructure/Framework/Adapters/LoggerAdapter.php
+// ====================================
+class LoggerAdapter {
+    public function log(string $message): void {
+        echo "[LOG]: $message\n";
+    }
+}
+
+// ==================================
+// 3. Infrastructure/Framework/Factories/ServiceFactory.php
+// ==================================
+class ServiceFactory {
+    public static function createSaleController(): SaleController {
+        $pdo = MySQLConnection::getConnection();
+        $saleRepo = new SaleRepositoryDatabase($pdo);
+        $validationService = new SaleValidationServiceImplementation();
+        $registerUseCase = new RegisterSaleUseCase($saleRepo, $validationService);
+        $appService = new SaleApplicationService($registerUseCase);
+        return new SaleController($appService);
+    }
+}
+
+// ========
+// Ejecución ejemplo de uso
+// ========
+$authMiddleware = new AuthenticationMiddleware();
+if ($authMiddleware->handle()) {
+    $controller = ServiceFactory::createSaleController();
+    $controller->createSale(['amount' => 500.75, 'date' => '2025-08-21']);
+} else {
+    echo "Authentication failed.\n";
+}
+
+
+
+esto LARAVEL ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+<?php
+// ================================
+// 1. Domain/Entity/Sale.php
+// ================================
+namespace Domain\Entity;
+
+class Sale {
+    private float $amount;
+    private string $date;
+    private int $id;
+
+    public function __construct(float $amount, string $date, int $id = 0) {
+        $this->amount = $amount;
+        $this->date = $date;
+        $this->id = $id;
+    }
+
+    public function getAmount(): float {
+        return $this->amount;
+    }
+
+    public function getDate(): string {
+        return $this->date;
+    }
+
+    public function getId(): int {
+        return $this->id;
+    }
+}
+
+// ================================
+// 1. Domain/Entity/User.php
+// ================================
+namespace Domain\Entity;
+
+class User {
+    private string $username;
+    private string $email;
+    private Address $address;
+
+    public function __construct(string $username, string $email, Address $address) {
+        $this->username = $username;
+        $this->email = $email;
+        $this->address = $address;
+    }
+
+    public function getUsername(): string {
+        return $this->username;
+    }
+
+    public function getEmail(): string {
+        return $this->email;
+    }
+
+    public function getAddress(): Address {
+        return $this->address;
+    }
+}
+
+// ================================
+// 1. Domain/ValueObject/Money.php
+// ================================
+namespace Domain\ValueObject;
+
+class Money {
+    private float $amount;
+    private string $currency;
+
+    public function __construct(float $amount, string $currency = 'USD') {
+        $this->amount = $amount;
+        $this->currency = $currency;
+    }
+
+    public function getAmount(): float {
+        return $this->amount;
+    }
+
+    public function getCurrency(): string {
+        return $this->currency;
+    }
+}
+
+// ================================
+// 1. Domain/ValueObject/Address.php
+// ================================
+namespace Domain\ValueObject;
+
+class Address {
+    private string $street;
+    private string $city;
+    private string $country;
+
+    public function __construct(string $street, string $city, string $country) {
+        $this->street = $street;
+        $this->city = $city;
+        $this->country = $country;
+    }
+
+    public function getFullAddress(): string {
+        return "{$this->street}, {$this->city}, {$this->country}";
+    }
+}
+
+// ================================
+// 1. Domain/IRepository/ISaleRepository.php
+// ================================
+namespace Domain\IRepository;
+
+use Domain\Entity\Sale;
+
+interface ISaleRepository {
+    public function save(Sale $sale): void;
+    public function findById(int $id): ?Sale;
+}
+
+// ================================
+// 1. Domain/IRepository/IUserRepository.php
+// ================================
+namespace Domain\IRepository;
+
+use Domain\Entity\User;
+
+interface IUserRepository {
+    public function save(User $user): void;
+    public function findByUsername(string $username): ?User;
+}
+
+// ================================
+// 1. Domain/IService/ISaleValidationService.php
+// ================================
+namespace Domain\IService;
+
+use Domain\Entity\Sale;
+
+interface ISaleValidationService {
+    public function validate(Sale $sale): bool;
+}
+
+// ================================
+// 2. Application/UseCase/RegisterSaleUseCase.php
+// ================================
+namespace Application\UseCase;
+
+use Domain\IRepository\ISaleRepository;
+use Domain\IService\ISaleValidationService;
+use Domain\Entity\Sale;
+
+class RegisterSaleUseCase {
+    private ISaleRepository $saleRepository;
+    private ISaleValidationService $validationService;
+
+    public function __construct(ISaleRepository $saleRepository, ISaleValidationService $validationService) {
+        $this->saleRepository = $saleRepository;
+        $this->validationService = $validationService;
+    }
+
+    public function execute(Sale $sale): void {
+        if ($this->validationService->validate($sale)) {
+            $this->saleRepository->save($sale);
+        } else {
+            throw new \Exception("Sale validation failed.");
+        }
+    }
+}
+
+// ================================
+// 2. Application/Service/SaleApplicationService.php
+// ================================
+namespace Application\Service;
+
+use Application\UseCase\RegisterSaleUseCase;
+use Domain\Entity\Sale;
+
+class SaleApplicationService {
+    private RegisterSaleUseCase $registerUseCase;
+
+    public function __construct(RegisterSaleUseCase $registerUseCase) {
+        $this->registerUseCase = $registerUseCase;
+    }
+
+    public function registerSale(float $amount, string $date): void {
+        $sale = new Sale($amount, $date);
+        $this->registerUseCase->execute($sale);
+    }
+}
+
+// ================================
+// 2. Application/DTO/SaleDTO.php
+// ================================
+namespace Application\DTO;
+
+class SaleDTO {
+    public float $amount;
+    public string $date;
+
+    public function __construct(array $data) {
+        $this->amount = $data['amount'];
+        $this->date = $data['date'];
+    }
+}
+
+// ================================
+// 2. Application/Command/CreateSaleCommand.php
+// ================================
+namespace Application\Command;
+
+use Application\DTO\SaleDTO;
+
+class CreateSaleCommand {
+    public SaleDTO $saleDTO;
+
+    public function __construct(SaleDTO $saleDTO) {
+        $this->saleDTO = $saleDTO;
+    }
+}
+
+// ================================
+// 3. Infrastructure/Eloquent/Models/SaleModel.php
+// ================================
+namespace Infrastructure\Eloquent\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class SaleModel extends Model {
+    protected $table = 'sales';
+    protected $fillable = ['amount', 'date'];
+    public $timestamps = false;
+}
+
+// ================================
+// 3. Infrastructure/Repository/EloquentSaleRepository.php
+// ================================
+namespace Infrastructure\Repository;
+
+use Domain\IRepository\ISaleRepository;
+use Domain\Entity\Sale;
+use Infrastructure\Eloquent\Models\SaleModel;
+
+class EloquentSaleRepository implements ISaleRepository {
+    public function save(Sale $sale): void {
+        SaleModel::create([
+            'amount' => $sale->getAmount(),
+            'date' => $sale->getDate(),
+        ]);
+    }
+
+    public function findById(int $id): ?Sale {
+        $model = SaleModel::find($id);
+        if ($model === null) return null;
+        return new Sale($model->amount, $model->date);
+    }
+}
+
+// ================================
+// 3. Infrastructure/ApiClients/PaymentGatewayClient.php
+// ================================
+namespace Infrastructure\ApiClients;
+
+class PaymentGatewayClient {
+    public function charge(float $amount): bool {
+        // Simulated call to external payment
+        return $amount > 0;
+    }
+}
+
+// ================================
+// 3. Infrastructure/ServiceImplementations/SaleValidationServiceImplementation.php
+// ================================
+namespace Infrastructure\ServiceImplementations;
+
+use Domain\Entity\Sale;
+use Domain\IService\ISaleValidationService;
+
+class SaleValidationServiceImplementation implements ISaleValidationService {
+    public function validate(Sale $sale): bool {
+        return $sale->getAmount() > 0;
+    }
+}
+
+// ================================
+// 3. Infrastructure/Connections/MySQLConnection.php
+// ================================
+namespace Infrastructure\Connections;
+
+use PDO;
+
+class MySQLConnection {
+    private static ?PDO $pdo = null;
+
+    public static function getConnection(): PDO {
+        if (self::$pdo === null) {
+            self::$pdo = new PDO('sqlite::memory:');
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$pdo->exec('CREATE TABLE sales (id INTEGER PRIMARY KEY, amount REAL, date TEXT)');
+        }
+        return self::$pdo;
+    }
+}
+
+// ================================
+// 3. Infrastructure/Framework/Http/Controllers/SaleController.php
+// ================================
+namespace Infrastructure\Framework\Http\Controllers;
+
+use Application\Service\SaleApplicationService;
+use Domain\Entity\Sale;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+
+class SaleController extends Controller {
+    private SaleApplicationService $saleService;
+
+    public function __construct(SaleApplicationService $saleService) {
+        $this->saleService = $saleService;
+    }
+
+    public function store(Request $request) {
+        $amount = $request->input('amount');
+        $date = $request->input('date');
+        try {
+            $this->saleService->registerSale($amount, $date);
+            return response()->json(['message' => 'Sale created successfully'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+}
+
+// ================================
+// 3. Infrastructure/Framework/Middleware/AuthenticationMiddleware.php
+// ================================
+namespace Infrastructure\Framework\Middleware;
+
+use Closure;
+
+class AuthenticationMiddleware {
+    public function handle($request, Closure $next) {
+        // Simple mock authentication check
+        if (!$request->header('Authorization')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        return $next($request);
+    }
+}
+
+// ================================
+// 3. Infrastructure/Framework/Adapters/LoggerAdapter.php
+// ================================
+namespace Infrastructure\Framework\Adapters;
+
+class LoggerAdapter {
+    public function log(string $message): void {
+        // Simple log to Laravel log or stdout
+        \Log::info($message);
+    }
+}
+
+// ================================
+// 3. Infrastructure/Framework/Factories/ServiceFactory.php
+// ================================
+namespace Infrastructure\Framework\Factories;
+
+use Infrastructure\Repository\EloquentSaleRepository;
+use Infrastructure\ServiceImplementations\SaleValidationServiceImplementation;
+use Application\UseCase\RegisterSaleUseCase;
+use Application\Service\SaleApplicationService;
+
+class ServiceFactory {
+    public static function createSaleApplicationService(): SaleApplicationService {
+        $saleRepository = new EloquentSaleRepository();
+        $validationService = new SaleValidationServiceImplementation();
+        $registerSaleUseCase = new RegisterSaleUseCase($saleRepository, $validationService);
+        return new SaleApplicationService($registerSaleUseCase);
+    }
+}
+-----------------------------------------------------------------
+
+// routes/api.php
+use Illuminate\Support\Facades\Route;
+use Infrastructure\Framework\Http\Controllers\SaleController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/sales', [SaleController::class, 'store']);
+});
+
+// Kernel.php para registrar middleware
+protected $routeMiddleware = [
+    'auth' => \Infrastructure\Framework\Middleware\AuthenticationMiddleware::class,
+];
+
+// AppServiceProvider.php para la inyección de dependencias usando el ServiceFactory
+public function register()
+{
+    $this->app->bind(SaleApplicationService::class, function ($app) {
+        return \Infrastructure\Framework\Factories\ServiceFactory::createSaleApplicationService();
+    });
+
+    $this->app->bind(SaleController::class, function ($app) {
+        return new SaleController($app->make(SaleApplicationService::class));
+    });
+}
