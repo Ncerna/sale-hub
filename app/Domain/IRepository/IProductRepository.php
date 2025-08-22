@@ -8,6 +8,8 @@ interface IProductRepository
     public function findById(int $id): ?Product;
     public function findAll(): array;
     public function delete(int $id): bool;
+    public function findByCode(string $code): ?Product;
+
     public function update(Product $product): Product;
 /**
      * @param int $page
