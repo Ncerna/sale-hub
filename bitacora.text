@@ -116,19 +116,17 @@ CREATE TABLE categorias (
     actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (familia_id) REFERENCES familias(id)
 );
-
-CREATE TABLE producto_atributos (
+CREATE TABLE categoria_atributos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    producto_id INT NOT NULL,                -- Referencia al producto
-    atributo_id INT NOT NULL,                -- Referencia al atributo definido para la categoría
-    valor TEXT,                             -- Valor del atributo para ese producto
+    categoria_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,           -- Nombre del atributo (ej. fecha_de_vencimiento)
+    tipo_dato VARCHAR(50) NOT NULL,         -- Tipo de dato (ej. string, int, date)
+    obligatorio BOOLEAN DEFAULT FALSE,       -- Si es obligatorio para la categoría
     creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
     actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (producto_id) REFERENCES productos(id),
-    FOREIGN KEY (atributo_id) REFERENCES categoria_atributos(id),
-    UNIQUE KEY (producto_id, atributo_id)
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
-)
+
 CREATE TABLE tipos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     categoria_id INT NOT NULL,
@@ -138,6 +136,9 @@ CREATE TABLE tipos (
     actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
+
+
+
 
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -151,16 +152,7 @@ CREATE TABLE productos (
     FOREIGN KEY (tipo_id) REFERENCES tipos(id)
 );
 
-CREATE TABLE categoria_atributos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    categoria_id INT NOT NULL,
-    nombre VARCHAR(100) NOT NULL,           -- Nombre del atributo (ej. fecha_de_vencimiento)
-    tipo_dato VARCHAR(50) NOT NULL,         -- Tipo de dato (ej. string, int, date)
-    obligatorio BOOLEAN DEFAULT FALSE,       -- Si es obligatorio para la categoría
-    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
-    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
-);
+
 
 CREATE TABLE producto_atributos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -174,3 +166,64 @@ CREATE TABLE producto_atributos (
     UNIQUE KEY (producto_id, atributo_id)
 );
 )
+
+
+
+
+class Product {
+    private string $id;
+    private string $name;                  // Nombre del producto
+    private string $code;                  // Código del producto
+    private ?string $barcode;              // Código de barras del producto (nullable)
+    private float $price_base;                  // Precio del producto
+    private ?string $description;          // Descripción del producto (nullable)
+    private int $stock;                   // Stock del producto
+    private int $minimum_stock;           // Stock mínimo del producto
+    private ?string $photo;               // Foto del producto (nullable)
+    private Product_type $produc_type;             // ID de la tipo (nullable)
+    private ?int $igv_affectation_id;       // ID del tipo de afectación IGV (nullable)
+    private ?string $igv_affect_code;       // Código de afectación IGV (nullable)
+    private ?string $unit_id;              // ID de la unidad de medida (nullable)
+    private int $status
+
+    private float $unit_cost;              // Costo de producción por unidad
+    private float $unit_price;             // Precio de venta por unidad
+    private float $price_with_igv;          // Precio unitario con IGV
+    private float $price_without_igv;       // Precio unitario sin IGV
+    private float $bulk_price_with_igv;      // Precio mayorista con IGV
+    private float $bulk_price_without_igv;   // Precio mayorista sin IGV
+    private float $offer_price_with_igv;     // Precio en oferta con IGV
+    private float $offer_price_without_igv;  // Precio en oferta sin IGV
+    private float $total_cost;             // Costo total
+    private float $igv_factor;             // Factor del IGV
+    private float $igv_rate;               // Tasa del IGV
+    private ?int $company_id;              // ID de la empresa (nullable)
+    private ?int $branch_id;               // ID de la sucursal (nullable)
+    private ?int $warehouse_id;            // ID del almacén (nullable)
+    private \DateTime $created_at;         // Fecha de creación
+    private \DateTime $updated_at;         // Fecha de actualización
+
+
+
+class Product
+{
+    private int $id;
+    private string $name;
+    private string $code;
+    private ?string $barcode;
+    private float $base_price;
+    private int $stock;
+    private int $minimum_stock;
+    private ?string $description;
+    private ?string $photo;
+    private Produc_type $product_type_id;
+    private Units_of_measure $;
+     private providers $;
+    private igv_affectation_types $igv_affectation_id;
+    private string $unit_id;
+    private int $status;
+    private ?int $company_id;
+    private ?int $branch_id;
+    private ?int $warehouse_id;
+    private \DateTime $created_at;
+    private \DateTime $updated_at;
