@@ -75,3 +75,102 @@ saleHub/
 
 
 https://www.perplexity.ai/search/que-arquitectur-es-esto-en-aqi-6nRnq3NER9WCEC2asNlUqw
+
+
+Correcto, con el diseño que hemos discutido tendrías al menos estas 5 tablas principales para manejar productos con atributos personalizados según categoría:
+
+familias — para agrupar grandes grupos de productos.
+
+categorías — subgrupos dentro de las familias.
+
+categoria_atributos — define qué atributos están asociados a cada categoría (por ejemplo, "fecha de vencimiento", "talla").
+
+productos — tabla principal con datos comunes y básicos de cada producto.
+
+producto_atributos (o similar) — almacena los valores concretos de cada atributo para cada producto específico.
+
+Este esquema es flexible y robusto, permitiendo que cada producto tenga atributos personalizados según su categoría sin alterar la estructura principal, y que el sistema opere de forma escalable y eficiente.
+
+Consulta :
+SELECT p.id, p.name, p.price, ca.nombre AS atributo_nombre, pav.valor
+FROM productos p
+LEFT JOIN producto_atributos pav ON p.id = pav.producto_id
+LEFT JOIN categoria_atributos ca ON pav.atributo_id = ca.id
+WHERE p.id = :producto_id;
+
+
+(CREATE TABLE familias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    familia_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (familia_id) REFERENCES familias(id)
+);
+
+CREATE TABLE producto_atributos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT NOT NULL,                -- Referencia al producto
+    atributo_id INT NOT NULL,                -- Referencia al atributo definido para la categoría
+    valor TEXT,                             -- Valor del atributo para ese producto
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (producto_id) REFERENCES productos(id),
+    FOREIGN KEY (atributo_id) REFERENCES categoria_atributos(id),
+    UNIQUE KEY (producto_id, atributo_id)
+);
+)
+CREATE TABLE tipos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoria_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_id INT NOT NULL,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (tipo_id) REFERENCES tipos(id)
+);
+
+CREATE TABLE categoria_atributos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoria_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,           -- Nombre del atributo (ej. fecha_de_vencimiento)
+    tipo_dato VARCHAR(50) NOT NULL,         -- Tipo de dato (ej. string, int, date)
+    obligatorio BOOLEAN DEFAULT FALSE,       -- Si es obligatorio para la categoría
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+
+CREATE TABLE producto_atributos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT NOT NULL,                -- Referencia al producto
+    atributo_id INT NOT NULL,                -- Referencia al atributo definido para la categoría
+    valor TEXT,                             -- Valor del atributo para ese producto
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (producto_id) REFERENCES productos(id),
+    FOREIGN KEY (atributo_id) REFERENCES categoria_atributos(id),
+    UNIQUE KEY (producto_id, atributo_id)
+);
+)
