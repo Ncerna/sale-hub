@@ -20,24 +20,23 @@ class Product
     private int $stock;
     private int $minimumStock;
     private ?string $photo;
-    private ?int $categoryId;
-    private ?string $unitId;
+    
+    // Unificados y corregidos nombres para IDs relacionados
+    private ?int $productTypeId;
     private ?int $providerId;
+    private ?int $unitsMeasureId;
+    
     private int $status;
     private ?int $companyId;
     private ?int $branchId;
     private ?int $warehouseId;
-
 
     /**
      * @var ProductAttribute[]
      */
     private array $attributes;
 
-    /**
-     * Constructor para Product.
-     * @param ProductAttribute[] $attributes
-     */
+
     public function __construct(
         string $id,
         string $name,
@@ -51,15 +50,13 @@ class Product
         int $stock,
         int $minimumStock,
         ?string $photo,
-        ?int $categoryId,
-        ?string $unitId,
+        ?int $productTypeId,
         ?int $providerId,
+        ?int $unitsMeasureId,
         int $status,
         ?int $companyId,
         ?int $branchId,
         ?int $warehouseId,
-        \DateTime $createdAt,
-        \DateTime $updatedAt,
         array $attributes = []
     ) {
         $this->id = $id;
@@ -74,19 +71,17 @@ class Product
         $this->stock = $stock;
         $this->minimumStock = $minimumStock;
         $this->photo = $photo;
-        $this->categoryId = $categoryId;
-        $this->unitId = $unitId;
+        $this->productTypeId = $productTypeId;
         $this->providerId = $providerId;
+        $this->unitsMeasureId = $unitsMeasureId;
         $this->status = $status;
         $this->companyId = $companyId;
         $this->branchId = $branchId;
         $this->warehouseId = $warehouseId;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
         $this->attributes = $attributes;
     }
 
-    // Getters para todas las propiedades
+    // Getters
     public function getId(): string { return $this->id; }
     public function getName(): string { return $this->name; }
     public function getCode(): string { return $this->code; }
@@ -99,41 +94,31 @@ class Product
     public function getStock(): int { return $this->stock; }
     public function getMinimumStock(): int { return $this->minimumStock; }
     public function getPhoto(): ?string { return $this->photo; }
-    public function getCategoryId(): ?int { return $this->categoryId; }
-    public function getUnitId(): ?string { return $this->unitId; }
+    public function getProductTypeId(): ?int { return $this->productTypeId; }
     public function getProviderId(): ?int { return $this->providerId; }
+    public function getUnitsMeasureId(): ?int { return $this->unitsMeasureId; }
     public function getStatus(): int { return $this->status; }
     public function getCompanyId(): ?int { return $this->companyId; }
     public function getBranchId(): ?int { return $this->branchId; }
     public function getWarehouseId(): ?int { return $this->warehouseId; }
+
     /**
      * @return ProductAttribute[]
      */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
+    public function getAttributes(): array { return $this->attributes; }
 
-    public function addAttribute(ProductAttribute $attribute): void
-    {
-        $this->attributes[] = $attribute;
-    }
+    public function addAttribute(ProductAttribute $attribute): void { $this->attributes[] = $attribute; }
+    public function setAttributes(array $attributes): void { $this->attributes = $attributes; }
 
-    public function setAttributes(array $attributes): void
-    {
-        $this->attributes = $attributes;
-    }
-
-
+    // Métodos de negocio
+    public function isStockBelowMinimum(): bool { return $this->stock < $this->minimumStock; }
+    public function getPriceWithIGV(): float { return $this->unitPrice->getBasePrice() * (1 + $this->igvRate->getRate() / 100); }
+    public function getStockValue(): float { return $this->stock * $this->unitPrice->getBasePrice(); }
 
     public function updateStock(int $quantity): void
     {
-        if ($quantity < 0) {
-            throw new \InvalidArgumentException("Quantity to decrease must be positive");
-        }
-        if ($quantity > $this->stock) {
-            throw new \DomainException("Not enough stock");
-        }
+        if ($quantity < 0) throw new \InvalidArgumentException("Quantity must be positive");
+        if ($quantity > $this->stock) throw new \DomainException("Not enough stock");
         $this->stock -= $quantity;
     }
 }

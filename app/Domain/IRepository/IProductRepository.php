@@ -1,8 +1,7 @@
 <?php
 namespace App\Domain\IRepository;
 
-use App\Domain\Entity\Product;
-
+use Domain\Entity\Product;
 interface IProductRepository
 {
     public function save(Product $product): Product;
@@ -10,6 +9,12 @@ interface IProductRepository
     public function findAll(): array;
     public function delete(int $id): bool;
     public function update(Product $product): Product;
-
+/**
+     * @param int $page
+     * @param int $size
+     * @param string|null $search
+     * @return Product[]
+     */
+    public function list(int $page, int $size, ?string $search = null): array;
 
 }
