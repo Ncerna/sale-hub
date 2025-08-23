@@ -3,7 +3,7 @@ namespace Application\UseCase;
 
 use Domain\IRepository\IProductRepository;
 
-class DeleteProductUseCase
+class ListProductUseCase
 {
     private IProductRepository $productRepository;
 
@@ -12,8 +12,8 @@ class DeleteProductUseCase
         $this->productRepository = $productRepository;
     }
 
-    public function execute(string $id): void
+    public function execute(int $page, int $size, ?string $search = null): array
     {
-        $this->productRepository->delete($id);
+        return $this->productRepository->list($page, $size, $search);
     }
 }

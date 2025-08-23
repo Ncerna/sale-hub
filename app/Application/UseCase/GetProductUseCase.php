@@ -13,8 +13,9 @@ class GetProductUseCase
         $this->productRepository = $productRepository;
     }
 
-    public function execute(string $id): ?Product
+    public function execute(int $id): ?Product
     {
         return $this->productRepository->findById($id);
     }
 }
+

@@ -8,27 +8,21 @@ class ProductDTO
     public string $code;
     public ?string $barcode;
     public ?string $description;
-    public float $unit_price;
-    public ?float $offer_price;
-    public float $igv_rate;
-    public string $igv_affectation_code;
+    public float $unitPrice;
+    public ?float $offerPrice;
+    public float $igvRate;
+    public string $igvAffectationCode;
     public int $stock;
-    public int $minimum_stock;
+    public int $minimumStock;
     public ?string $photo;
-    public ?int $category_id;
-    public ?string $unit_id;
-    public ?int $provider_id;
+    public ?int $productTypeId;
+    public ?int $providerId;
+    public ?int $unitsMeasureId;
     public int $status;
-    public ?int $company_id;
-    public ?int $branch_id;
-    public ?int $warehouse_id;
-    public ?string $created_at;
-    public ?string $updated_at;
-
-    /**
-     * @var array
-     * Formato: [ ['attribute_id' => int, 'value' => string], ... ]
-     */
+    public ?int $companyId;
+    public ?int $branchId;
+    public ?int $warehouseId;
+    /** @var array */
     public array $attributes;
 
     public function __construct(array $data)
@@ -38,22 +32,20 @@ class ProductDTO
         $this->code = $data['code'];
         $this->barcode = $data['barcode'] ?? null;
         $this->description = $data['description'] ?? null;
-        $this->unit_price = $data['unit_price'];
-        $this->offer_price = $data['offer_price'] ?? null;
-        $this->igv_rate = $data['igv_rate'];
-        $this->igv_affectation_code = $data['igv_affectation_code'];
+        $this->unitPrice = $data['unitPrice'];
+        $this->offerPrice = $data['offerPrice'] ?? null;
+        $this->igvRate = $data['igvRate'];
+        $this->igvAffectationCode = $data['igvAffectationCode'];
         $this->stock = $data['stock'];
-        $this->minimum_stock = $data['minimum_stock'];
+        $this->minimumStock = $data['minimumStock'];
         $this->photo = $data['photo'] ?? null;
-        $this->category_id = $data['category_id'] ?? null;
-        $this->unit_id = $data['unit_id'] ?? null;
-        $this->provider_id = $data['provider_id'] ?? null;
+        $this->productTypeId = $data['productTypeId'] ?? null;
+        $this->providerId = $data['providerId'] ?? null;
+        $this->unitsMeasureId = $data['unitsMeasureId'] ?? null;
         $this->status = $data['status'] ?? 1;
-        $this->company_id = $data['company_id'] ?? null;
-        $this->branch_id = $data['branch_id'] ?? null;
-        $this->warehouse_id = $data['warehouse_id'] ?? null;
-        $this->created_at = $data['created_at'] ?? null;
-        $this->updated_at = $data['updated_at'] ?? null;
+        $this->companyId = $data['companyId'] ?? null;
+        $this->branchId = $data['branchId'] ?? null;
+        $this->warehouseId = $data['warehouseId'] ?? null;
         $this->attributes = $data['attributes'] ?? [];
     }
 }

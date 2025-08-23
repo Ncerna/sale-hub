@@ -1,10 +1,11 @@
 <?php
 namespace Application\Service;
 
-use Application\UseCase\RegisterProductUseCase;
+use Application\UseCase\CreateProductUseCase;
 use Application\UseCase\UpdateProductUseCase;
 use Application\UseCase\DeleteProductUseCase;
 use Application\UseCase\GetProductUseCase;
+use Application\UseCase\ListProductUseCase;
 use Domain\Entity\Product;
 use Domain\Entity\ProductAttribute;
 use Domain\ValueObject\Price;
@@ -13,54 +14,61 @@ use Domain\ValueObject\IGVAffectationCode;
 
 class ProductApplicationService
 {
-    private RegisterProductUseCase $registerUseCase;
+    private CreateProductUseCase $createProductUseCase ;
     private UpdateProductUseCase $updateUseCase;
     private DeleteProductUseCase $deleteUseCase;
     private GetProductUseCase $getUseCase;
+    private ListProductUseCase $listUseCase;
 
     public function __construct(
-        RegisterProductUseCase $registerUseCase,
+        CreateProductUseCase $registerUseCase,
         UpdateProductUseCase $updateUseCase,
         DeleteProductUseCase $deleteUseCase,
-        GetProductUseCase $getUseCase
+        GetProductUseCase $getUseCase,
+        ListProductUseCase $listUseCase
     ) {
         $this->registerUseCase = $registerUseCase;
         $this->updateUseCase = $updateUseCase;
         $this->deleteUseCase = $deleteUseCase;
         $this->getUseCase = $getUseCase;
+        $this->listUseCase = $listUseCase;
     }
 
-    public function registerProduct(array $data): void
+    public function registerProduct(array $data): Product
     {
         $product = $this->mapDataToProduct($data);
-        $this->registerUseCase->execute($product);
+        return $this->registerUseCase->execute($product);
     }
 
-    public function updateProduct(string $id, array $data): void
+    public function updateProduct(int $id, array $data): Product
     {
         $data['id'] = $id;
         $product = $this->mapDataToProduct($data);
-        $this->updateUseCase->execute($product);
+        return $this->updateUseCase->execute($product);
     }
 
-    public function deleteProduct(string $id): void
+    public function deleteProduct(int $id): bool
     {
-        $this->deleteUseCase->execute($id);
+        return $this->deleteUseCase->execute($id);
     }
 
-    public function getProduct(string $id): ?Product
+    public function getProduct(int $id): ?Product
     {
         return $this->getUseCase->execute($id);
+    }
+
+    public function listProducts(int $page, int $size, ?string $search = null): array
+    {
+        return $this->listUseCase->execute($page, $size, $search);
     }
 
     private function mapDataToProduct(array $data): Product
     {
         $attributes = [];
-
-        foreach (($data['attributes'] ?? []) as $attrData) {
+        foreach (($data['attributes'] ?? []) as $attr) {
             $attributes[] = new ProductAttribute(
-                $attrData['attribute_id'],
-                $attrData['value']
+                $attr['attributeId'],
+                $attr['value']
             );
         }
 
@@ -70,23 +78,22 @@ class ProductApplicationService
             $data['code'],
             $data['barcode'] ?? null,
             $data['description'] ?? null,
-            new Price($data['unit_price']),
-            isset($data['offer_price']) ? new Price($data['offer_price']) : null,
-            new IGVRate($data['igv_rate']),
-            new IGVAffectationCode($data['igv_affectation_code']),
+            new Price($data['unitPrice']),
+            isset($data['offerPrice']) ? new Price($data['offerPrice']) : null,
+            new IGVRate($data['igvRate']),
+            new IGVAffectationCode($data['igvAffectationCode']),
             $data['stock'],
-            $data['minimum_stock'],
+            $data['minimumStock'],
             $data['photo'] ?? null,
-            $data['category_id'] ?? null,
-            $data['unit_id'] ?? null,
-            $data['provider_id'] ?? null,
+            $data['productTypeId'] ?? null,
+            $data['providerId'] ?? null,
+            $data['unitsMeasureId'] ?? null,
             $data['status'] ?? 1,
-            $data['company_id'] ?? null,
-            $data['branch_id'] ?? null,
-            $data['warehouse_id'] ?? null,
-            isset($data['created_at']) ? new \DateTime($data['created_at']) : new \DateTime(),
-            isset($data['updated_at']) ? new \DateTime($data['updated_at']) : new \DateTime(),
+            $data['companyId'] ?? null,
+            $data['branchId'] ?? null,
+            $data['warehouseId'] ?? null,
             $attributes
         );
     }
-}
+    }
+

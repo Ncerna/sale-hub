@@ -1,9 +1,8 @@
 <?php
 namespace Infrastructure\Persistence;
 
-use Domain\Entity\Product1;
-use Domain\IRepository\IProductRepository1;
 use Domain\Entity\Product;
+use Domain\IRepository\IProductRepository;
 use Domain\ValueObject\Price;
 use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
@@ -11,7 +10,7 @@ use App\Models\Product1 as EloquentProduct; // Modelo Eloquent de Laravel
 
 class ProductRepository1 implements IProductRepository
 {
-    public function findById(string $id): ?Product1
+    public function findById(string $id): ?Product
     {
         $record = EloquentProduct::find($id);
 
@@ -19,7 +18,7 @@ class ProductRepository1 implements IProductRepository
             return null;
         }
 
-        return new Product1(
+        return new Product(
             $record->id,
             $record->name,
             $record->code,
