@@ -1,25 +1,27 @@
 <?php
-namespace App\Application\UseCase;
+namespace Application\UseCase;
 
-use App\Domain\Entity\Product;
-use App\Domain\IRepository\IProductRepository;
+use Domain\IRepository\IProductRepository;
+use Domain\IService\IProductValidationService;
+use Domain\Entity\Product;
 
 class UpdateProductUseCase
 {
-    private IProductRepository $repository;
+    private IProductRepository $productRepository;
+    private IProductValidationService $validationService;
 
-    public function __construct(IProductRepository $repository)
+    public function __construct(IProductRepository $productRepository, IProductValidationService $validationService)
     {
-        $this->repository = $repository;
+        $this->productRepository = $productRepository;
+        $this->validationService = $validationService;
     }
 
-    public function execute(int $id, string $name, float $price, int $stock): ?Product
+    public function execute(Product $product): void
     {
-        $product = $this->repository->findById($id);
-        if (!$product) {
-            return null;
+        if (!$this->validationService->validate($product)) {
+            throw new \Exception("Product validation failed.");
         }
-        $updated = new Product($id, $name, $price, $stock);
-        return $this->repository->update($updated);
+
+        $this->productRepository->update($product);
     }
 }

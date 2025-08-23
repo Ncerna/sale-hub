@@ -29,7 +29,7 @@ class ApplyDiscountUseCase
 
         // Aplicar el descuento (ejemplo, modificando el precio unitario)
         $newPriceBase = $product->getUnitPrice()->getBasePrice() * (1 - $discountPercentage / 100);
-        $product->setUnitPrice(new \Domain\ValueObject\Price($newPriceBase, $product->getUnitPrice()->getCurrency()));
+        $product->setUnitPrice(new \Domain\ValueObject\Price($newPriceBase, $product->getUnitPrice()->getBasePrice()));
 
         // Guardar cambios
         $this->productRepository->save($product);

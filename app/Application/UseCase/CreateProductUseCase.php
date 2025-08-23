@@ -1,21 +1,27 @@
 <?php
-namespace App\Application\UseCase;
+namespace Application\UseCase;
 
-use App\Domain\Entity\Product;
-use App\Domain\IRepository\IProductRepository;
+use Domain\Entity\Product;
+use Domain\IRepository\IProductRepository;
+use Domain\IService\IProductValidationService;
 
 class CreateProductUseCase
 {
-    private IProductRepository $repository;
+    private IProductRepository $productRepository;
+    private IProductValidationService $validationService;
 
-    public function __construct(IProductRepository $repository)
+    public function __construct(IProductRepository $productRepository, IProductValidationService $validationService)
     {
-        $this->repository = $repository;
+        $this->productRepository = $productRepository;
+        $this->validationService = $validationService;
     }
 
-    public function execute(string $name, float $price, int $stock): Product
+    public function execute(Product $product): Product
     {
-        $product = new Product(null, $name, $price, $stock);
-        return $this->repository->save($product);
+        if (!$this->validationService->validate($product)) {
+            throw new \Exception("Product validation failed");
+        }
+
+        return $this->productRepository->save($product);
     }
 }

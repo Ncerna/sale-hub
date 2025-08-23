@@ -1,11 +1,11 @@
 <?php
 namespace App\Infrastructure\Framework\Controller;
 
-use App\Application\UseCase\CreateProductUseCase;
-use App\Application\UseCase\UpdateProductUseCase;
-use App\Application\UseCase\DeleteProductUseCase;
-use App\Application\UseCase\ListProductsUseCase;
-use App\Infrastructure\Persistence\ProductRepository;
+use Application\UseCase\CreateProductUseCase;
+use Application\UseCase\UpdateProductUseCase;
+use Application\UseCase\DeleteProductUseCase;
+use Application\UseCase\ListProductsUseCase;
+use Infrastructure\Persistence\ProductRepository;
 use Illuminate\Http\Request;
 
 class ProductController

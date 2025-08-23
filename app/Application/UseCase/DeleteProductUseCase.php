@@ -1,19 +1,19 @@
 <?php
-namespace App\Application\UseCase;
+namespace Application\UseCase;
 
-use App\Domain\IRepository\IProductRepository;
+use Domain\IRepository\IProductRepository;
 
 class DeleteProductUseCase
 {
-    private IProductRepository $repository;
+    private IProductRepository $productRepository;
 
-    public function __construct(IProductRepository $repository)
+    public function __construct(IProductRepository $productRepository)
     {
-        $this->repository = $repository;
+        $this->productRepository = $productRepository;
     }
 
     public function execute(int $id): bool
     {
-        return $this->repository->delete($id);
+        return $this->productRepository->delete($id);
     }
 }

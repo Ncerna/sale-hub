@@ -1,5 +1,5 @@
 <?php
-namespace App\Domain\IRepository;
+namespace Domain\IRepository;
 
 use Domain\Entity\Product;
 interface IProductRepository

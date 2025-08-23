@@ -1,9 +1,8 @@
 <?php
 namespace Infrastructure\Persistence;
 
-use Domain\Entity\Product1;
-use Domain\IRepository\IProductRepository;
 use Domain\Entity\Product;
+use Domain\IRepository\IProductRepository;
 use Domain\ValueObject\Price;
 use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
