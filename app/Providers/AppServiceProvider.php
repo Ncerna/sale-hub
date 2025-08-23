@@ -18,9 +18,11 @@ class AppServiceProvider extends ServiceProvider
 
     // ya tenías este para categorías:
     $this->app->bind(ICategoryRepository::class, CategoryRepository::class);
-    }
+    
 
-    /**
+      $this->app->bind(ProductServiceInterface::class, ProductApplicationService::class);
+    }
+      /**
      * Bootstrap any application services.
      */
     public function boot(): void

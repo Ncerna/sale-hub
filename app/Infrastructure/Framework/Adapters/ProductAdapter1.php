@@ -1,14 +1,14 @@
 <?php
 namespace Infrastructure\Framework\Adapters;
 
-use Domain\Entity\Product1;
-use Application\DTO\ProductDTO1;
+use Domain\Entity\Product;
+use Application\DTO\ProductDTO;
 
 class ProductAdapter
 {
-    public static function toDTO(Product1 $product): ProductDTO1
+    public static function toDTO(Product $product): ProductDTO
     {
-        return new ProductDTO1(
+        return new ProductDTO(
             $product->getId(),
             $product->getName(),
             $product->getCode(),
@@ -17,7 +17,7 @@ class ProductAdapter
         );
     }
 
-    public static function toDomainEntity(ProductDTO1 $dto): Product1
+    public static function toDomainEntity(ProductDTO $dto): Product
     {
         // Si necesitas convertir en sentido inverso
         // construir entidad Product usando DTO y value objects

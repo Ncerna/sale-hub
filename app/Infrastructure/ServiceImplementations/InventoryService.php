@@ -1,13 +1,13 @@
 <?php
 namespace Infrastructure\ServiceImplementations;
 
-use Domain\IRepository\IProductRepository1;
+use App\Domain\IRepository\IProductRepository;
 
 class InventoryService
 {
-    private IProductRepository1 $productRepository;
+    private IProductRepository $productRepository;
 
-    public function __construct(IProductRepository1 $productRepository)
+    public function __construct(IProductRepository $productRepository)
     {
         $this->productRepository = $productRepository;
     }

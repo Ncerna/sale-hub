@@ -8,16 +8,16 @@ class ProductCoordinatorService
 {
     private CreateProductUseCase $createUseCase;
     private UpdateStockUseCase $updateStockUseCase;
-    private ProductService $productService;
+    
 
     public function __construct(
         CreateProductUseCase $createUseCase,
         UpdateStockUseCase $updateStockUseCase,
-        ProductService $productService
+      
     ) {
         $this->createUseCase = $createUseCase;
         $this->updateStockUseCase = $updateStockUseCase;
-        $this->productService = $productService;
+    
     }
 
     public function createProduct($command)

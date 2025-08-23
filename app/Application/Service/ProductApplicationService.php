@@ -84,8 +84,7 @@ class ProductApplicationService
             $data['company_id'] ?? null,
             $data['branch_id'] ?? null,
             $data['warehouse_id'] ?? null,
-            isset($data['created_at']) ? new \DateTime($data['created_at']) : new \DateTime(),
-            isset($data['updated_at']) ? new \DateTime($data['updated_at']) : new \DateTime(),
+            
             $attributes
         );
     }

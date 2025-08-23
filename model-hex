@@ -1,0 +1,452 @@
+
+<?php
+ Domain/                           
+│   │   ├── Entity/                      
+│   │   ├── IRepository/                   
+│   │   ├── IService/                    
+│   │   └── ValueObject/   
+
+
+// src/Domain/Entities/Product.php
+namespace App\Domain\Entities;
+
+use App\Domain\ValueObjects\Price;
+use App\Domain\ValueObjects\IGVRate;
+use App\Domain\ValueObjects\IGVAffectationCode;
+
+class Product {
+    private string $name;
+    private Price $basePrice;
+    private IGVRate $igvRate;
+    private IGVAffectationCode $igvAffectationCode;
+    private int $stock;
+
+    public function __construct(
+        string $name,
+        Price $basePrice,
+        IGVRate $igvRate,
+        IGVAffectationCode $igvAffectationCode,
+        int $stock
+    ) {
+        if ($stock < 0) {
+            throw new \InvalidArgumentException("Stock cannot be negative");
+        }
+        $this->name = $name;
+        $this->basePrice = $basePrice;
+        $this->igvRate = $igvRate;
+        $this->igvAffectationCode = $igvAffectationCode;
+        $this->stock = $stock;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getBasePrice(): Price {
+        return $this->basePrice;
+    }
+
+    public function getIgvRate(): IGVRate {
+        return $this->igvRate;
+    }
+
+    public function getIgvAffectationCode(): IGVAffectationCode {
+        return $this->igvAffectationCode;
+    }
+
+    public function getStock(): int {
+        return $this->stock;
+    }
+    
+    // Ejemplo: cálculo del precio con IGV incluido
+    public function getPriceWithIGV(): float {
+        return $this->basePrice->getAmount() * (1 + $this->igvRate->getRate());
+    }
+
+    // Ejemplo: modificar stock
+    public function reduceStock(int $quantity): void {
+        if ($quantity > $this->stock) {
+            throw new \InvalidArgumentException("Not enough stock");
+        }
+        $this->stock -= $quantity;
+    }
+}
+
+// src/Domain/ValueObjects/Price.php
+namespace App\Domain\ValueObjects;
+
+class Price {
+    private float $amount;
+
+    public function __construct(float $amount) {
+        if ($amount < 0) {
+            throw new \InvalidArgumentException("Price cannot be negative");
+        }
+        $this->amount = $amount;
+    }
+
+    public function getAmount(): float {
+        return $this->amount;
+    }
+}
+
+// src/Domain/ValueObjects/IGVRate.php
+namespace App\Domain\ValueObjects;
+
+class IGVRate {
+    private float $rate;
+
+    public function __construct(float $rate) {
+        if ($rate < 0 || $rate > 1) {
+            throw new \InvalidArgumentException("Invalid IGV rate");
+        }
+        $this->rate = $rate;
+    }
+
+    public function getRate(): float {
+        return $this->rate;
+    }
+}
+
+// src/Domain/ValueObjects/IGVAffectationCode.php
+namespace App\Domain\ValueObjects;
+
+class IGVAffectationCode {
+    private string $code;
+
+    public function __construct(string $code) {
+        // Validar códigos válidos si es necesario
+        $this->code = $code;
+    }
+
+    public function getCode(): string {
+        return $this->code;
+    }
+}
+
+// src/Domain/IRepository/ProductRepository.php
+namespace App\Domain\IRepository;
+
+use App\Domain\Entities\Product;
+
+interface ProductRepository {
+    public function save(Product $product): void;
+    public function findByName(string $name): ?Product;
+    // Otros métodos necesarios para la persistencia
+}
+
+// src/Domain/IService/ProductService.php
+namespace App\Domain\IService;
+
+use App\Domain\Entities\Product;
+
+interface ProductService {
+    public function createProduct(
+        string $name,
+        float $basePrice,
+        float $igvRate,
+        string $igvAffectationCode,
+        int $stock
+    ): Product;
+
+    public function reduceStock(string $productName, int $quantity): void;
+}
+-----------------------
+├── Application/                       
+│   │   ├── UseCase/                      
+│   │   ├── Service/                       
+│   │   ├── DTO/                        
+│   │   └── Command/
+
+// src/Application/Product/DTO/ProductDTO.php
+namespace App\Application\Product\DTO;
+
+class ProductDTO {
+    public string $name;
+    public float $basePrice;
+    public float $igvRate;
+    public string $igvAffectationCode;
+    public int $stock;
+
+    public function __construct(string $name, float $basePrice, float $igvRate, string $igvAffectationCode, int $stock) {
+        $this->name = $name;
+        $this->basePrice = $basePrice;
+        $this->igvRate = $igvRate;
+        $this->igvAffectationCode = $igvAffectationCode;
+        $this->stock = $stock;
+    }
+}
+
+// src/Application/Product/UseCase/CreateProductUseCase.php
+namespace App\Application\Product\UseCase;
+
+use App\Application\Product\DTO\ProductDTO;
+use App\Domain\IService\ProductService;
+
+class CreateProductUseCase {
+    private ProductService $productService;
+
+    public function __construct(ProductService $productService) {
+        $this->productService = $productService;
+    }
+
+    public function execute(ProductDTO $productDTO) {
+        // Aquí se llama al servicio de dominio para crear el producto
+        return $this->productService->createProduct(
+            $productDTO->name,
+            $productDTO->basePrice,
+            $productDTO->igvRate,
+            $productDTO->igvAffectationCode,
+            $productDTO->stock
+        );
+    }
+}
+
+// src/Application/Product/Service/ProductApplicationService.php
+namespace App\Application\Product\Service;
+
+use App\Domain\IService\ProductService;
+use App\Domain\Entities\Product;
+use App\Domain\ValueObjects\Price;
+use App\Domain\ValueObjects\IGVRate;
+use App\Domain\ValueObjects\IGVAffectationCode;
+
+class ProductApplicationService implements ProductService {
+    private ProductService $productDomainService;
+
+    public function __construct(ProductService $productDomainService) {
+        $this->productDomainService = $productDomainService;
+    }
+
+    public function createProduct(string $name, float $basePrice, float $igvRate, string $igvAffectationCode, int $stock): Product {
+        // Validaciones o transformaciones específicas de la capa de aplicación podrían ir aquí
+        $price = new Price($basePrice);
+        $rate = new IGVRate($igvRate);
+        $code = new IGVAffectationCode($igvAffectationCode);
+
+        // Delegamos al servicio de dominio para la creación real
+        return $this->productDomainService->createProduct($name, $price, $rate, $code, $stock);
+    }
+
+    public function reduceStock(string $productName, int $quantity): void {
+        $this->productDomainService->reduceStock($productName, $quantity);
+    }
+}
+
+// src/Application/Product/Command/CreateProductCommand.php
+namespace App\Application\Product\Command;
+
+use App\Application\Product\DTO\ProductDTO;
+
+class CreateProductCommand {
+    private ProductDTO $productDTO;
+
+    public function __construct(ProductDTO $productDTO) {
+        $this->productDTO = $productDTO;
+    }
+
+    public function getProductDTO(): ProductDTO {
+        return $this->productDTO;
+    }
+}
+
+-----------------------
+Infrastructure/                  
+│   │   ├── Persistence/                
+│   │   ├── ApiClients/                  
+│   │   ├── ServiceImplementations/     
+│   │   ├── Connections/               
+│   │   └── Framework/        
+│   │       ├── Controller/             
+│   │       ├── Middleware/             
+│   │       ├── Adapters/               
+│   │       └── Factories/ 
+
+
+// app/Infrastructure/Persistence/Eloquent/ProductRepository.php
+
+namespace App\Infrastructure\Persistence\Eloquent;
+
+use App\Domain\Entities\Product;
+use App\Domain\IRepository\ProductRepository;
+use App\Infrastructure\Persistence\Eloquent\Models\ProductModel;
+
+class ProductRepository implements ProductRepository
+{
+    public function save(Product $product): void
+    {
+        $model = ProductModel::updateOrCreate(
+            ['name' => $product->getName()],
+            [
+                'base_price' => $product->getBasePrice()->getAmount(),
+                'igv_rate' => $product->getIgvRate()->getRate(),
+                'igv_affectation_code' => $product->getIgvAffectationCode()->getCode(),
+                'stock' => $product->getStock(),
+            ]
+        );
+    }
+
+    public function findByName(string $name): ?Product
+    {
+        $model = ProductModel::where('name', $name)->first();
+        if (!$model) {
+            return null;
+        }
+
+        return new Product(
+            $model->name,
+            new \App\Domain\ValueObjects\Price($model->base_price),
+            new \App\Domain\ValueObjects\IGVRate($model->igv_rate),
+            new \App\Domain\ValueObjects\IGVAffectationCode($model->igv_affectation_code),
+            $model->stock
+        );
+    }
+}
+
+// app/Infrastructure/Persistence/Eloquent/Models/ProductModel.php
+
+namespace App\Infrastructure\Persistence\Eloquent\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ProductModel extends Model
+{
+    protected $table = 'products';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'base_price',
+        'igv_rate',
+        'igv_affectation_code',
+        'stock',
+    ];
+}
+
+// app/Infrastructure/ApiClients/ExternalProductApiClient.php
+
+namespace App\Infrastructure\ApiClients;
+
+class ExternalProductApiClient
+{
+    public function fetchProductData(string $productId)
+    {
+        // Ejemplo simple con HTTP client de Laravel
+        $response = \Http::get("https://api.external.com/products/{$productId}");
+        return $response->json();
+    }
+}
+
+// app/Infrastructure/ServiceImplementations/ProductPricingService.php
+
+namespace App\Infrastructure\ServiceImplementations;
+
+class ProductPricingService
+{
+    public function calculateFinalPrice(float $basePrice, float $igvRate): float
+    {
+        return $basePrice * (1 + $igvRate);
+    }
+}
+
+// app/Infrastructure/Connections/CustomDatabaseConnection.php
+
+namespace App\Infrastructure\Connections;
+
+use Illuminate\Support\Facades\DB;
+
+class CustomDatabaseConnection
+{
+    public function query(string $sql, array $bindings = [])
+    {
+        return DB::select($sql, $bindings);
+    }
+}
+
+// app/Infrastructure/Framework/Controller/ProductController.php
+
+namespace App\Infrastructure\Framework\Controller;
+
+use App\Application\Product\UseCase\CreateProductUseCase;
+use App\Application\Product\DTO\ProductDTO;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    private CreateProductUseCase $createProductUseCase;
+
+    public function __construct(CreateProductUseCase $createProductUseCase)
+    {
+        $this->createProductUseCase = $createProductUseCase;
+    }
+
+    public function store(Request $request)
+    {
+        $dto = new ProductDTO(
+            $request->input('name'),
+            $request->input('basePrice'),
+            $request->input('igvRate'),
+            $request->input('igvAffectationCode'),
+            $request->input('stock')
+        );
+
+        $product = $this->createProductUseCase->execute($dto);
+
+        return response()->json(['product' => $product->getName()], 201);
+    }
+}
+
+// app/Infrastructure/Framework/Middleware/CheckProductStock.php
+
+namespace App\Infrastructure\Framework\Middleware;
+
+use Closure;
+
+class CheckProductStock
+{
+    public function handle($request, Closure $next)
+    {
+        if ($request->input('stock') < 0) {
+            return response()->json(['error' => 'Stock must be non-negative'], 400);
+        }
+
+        return $next($request);
+    }
+}
+
+// app/Infrastructure/Framework/Adapters/ProductRequestAdapter.php
+
+namespace App\Infrastructure\Framework\Adapters;
+
+use Illuminate\Http\Request;
+use App\Application\Product\DTO\ProductDTO;
+
+class ProductRequestAdapter
+{
+    public static function adapt(Request $request): ProductDTO
+    {
+        return new ProductDTO(
+            $request->input('name'),
+            $request->float('basePrice'),
+            $request->float('igvRate'),
+            $request->input('igvAffectationCode'),
+            $request->int('stock')
+        );
+    }
+}
+
+// app/Infrastructure/Framework/Factories/ProductFactory.php
+
+namespace App\Infrastructure\Framework\Factories;
+
+use App\Infrastructure\Persistence\Eloquent\ProductRepository;
+use App\Application\Product\Service\ProductApplicationService;
+
+class ProductFactory
+{
+    public static function createService(): ProductApplicationService
+    {
+        $repository = new ProductRepository();
+        return new ProductApplicationService($repository);
+    }
+}
