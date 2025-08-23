@@ -52,6 +52,9 @@ class ProductService implements ProductServiceInterface
     {
         return $this->productRepository->findById($id);
     }
+    public function listAll(int $page, int $size, ?string $search = null): array{
+        return [];
+    }
 }
 
 

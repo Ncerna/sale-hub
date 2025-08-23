@@ -12,4 +12,8 @@ interface ProductServiceInterface
     public function deleteProduct(string $id): void;
 
     public function getProduct(string $id);
+
+    public function listAll(int $page, int $size, ?string $search = null): array;
 }
+
+
