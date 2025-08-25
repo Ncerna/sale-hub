@@ -1,7 +1,7 @@
 <?php
 namespace App\Infrastructure\Framework\Controller;
 
-use Application\Contracts\ProductServiceInterface;
+use App\Application\Contracts\ProductServiceInterface;
 use Illuminate\Http\Request;
 
 class ProductController

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Contracts;
+namespace App\Application\Contracts;
 
 use Domain\Entity\Product;
 

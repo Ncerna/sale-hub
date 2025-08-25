@@ -1,7 +1,7 @@
 <?php
-namespace Application\Service;
+namespace App\Application\Service;
 
-use Application\Contracts\ProductServiceInterface;
+use App\Application\Contracts\ProductServiceInterface;
 use Application\UseCase\CreateProductUseCase;
 use Application\UseCase\UpdateProductUseCase;
 use Application\UseCase\DeleteProductUseCase;
