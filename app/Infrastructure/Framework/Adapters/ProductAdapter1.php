@@ -4,9 +4,9 @@ namespace Infrastructure\Framework\Adapters;
 use Domain\Entity\Product;
 use Application\DTO\ProductDTO;
 
-class ProductAdapter
+class ProductAdapter1
 {
-    public static function toDTO(Product $product): ProductDTO
+   /* public static function toDTO(Product $product): ProductDTO
     {
         return new ProductDTO(
             $product->getId(),
@@ -21,5 +21,5 @@ class ProductAdapter
     {
         // Si necesitas convertir en sentido inverso
         // construir entidad Product usando DTO y value objects
-    }
+    }*/
 }

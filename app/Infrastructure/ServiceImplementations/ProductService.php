@@ -1,15 +1,13 @@
 <?php
-
 namespace Infrastructure\ServiceImplementations;
 
 use Application\Contracts\ProductServiceInterface;
-use App\Domain\IRepository\IProductRepository;
+use Domain\IRepository\IProductRepository;
 use Application\Factories\ProductFactory;
-use App\Domain\Entities\Product;
-
-class ProductService implements ProductServiceInterface
+//S una forma
+//class ProductService implements ProductServiceInterface
 {
-    private IProductRepository $productRepository;
+/*    private IProductRepository $productRepository;
 
     public function __construct(IProductRepository $productRepository)
     {
@@ -18,8 +16,9 @@ class ProductService implements ProductServiceInterface
 
     public function registerProduct(array $data): void
     {
-        // Crear entidad producto con fábrica desde datos recibidos
+        // Crear entidad producto usando fábrica
         $product = ProductFactory::createFromArray($data);
+        // Guardar usando repositorio del dominio
         $this->productRepository->save($product);
     }
 
@@ -29,7 +28,7 @@ class ProductService implements ProductServiceInterface
         if (!$product) {
             throw new \InvalidArgumentException("Producto no encontrado");
         }
-        // Actualizar atributos - ejemplo simple, ideal usar setters
+        // Actualizar atributos según datos recibidos
         if (isset($data['name'])) {
             $product->setName($data['name']);
         }
@@ -48,13 +47,13 @@ class ProductService implements ProductServiceInterface
         $this->productRepository->delete($product);
     }
 
-    public function getProduct(string $id): ?Product
+    public function getProduct(string $id)
     {
         return $this->productRepository->findById($id);
     }
-    public function listAll(int $page, int $size, ?string $search = null): array{
-        return [];
-    }
+
+    public function listAll(int $page, int $size, ?string $search = null): array
+    {
+        return $this->productRepository->list($page, $size, $search);
+    }*/
 }
-
-

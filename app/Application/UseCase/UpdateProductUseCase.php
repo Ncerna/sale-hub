@@ -16,12 +16,12 @@ class UpdateProductUseCase
         $this->validationService = $validationService;
     }
 
-    public function execute(Product $product): void
+    public function execute(Product $product): Product
     {
         if (!$this->validationService->validate($product)) {
             throw new \Exception("Product validation failed.");
         }
 
-        $this->productRepository->update($product);
+       return $this->productRepository->update($product);
     }
 }

@@ -252,7 +252,11 @@ class CreateProductCommand {
 
 -----------------------
 Infrastructure/                  
-│   │   ├── Persistence/                
+│   │   ├── Persistence/
+              ├── Eloquent/ 
+              ├── Repository/ 
+              ├── Doctrine/
+              └── OtherORM/
 │   │   ├── ApiClients/                  
 │   │   ├── ServiceImplementations/     
 │   │   ├── Connections/               
@@ -262,8 +266,6 @@ Infrastructure/
 │   │       ├── Adapters/               
 │   │       └── Factories/ 
 
-
-// app/Infrastructure/Persistence/Eloquent/ProductRepository.php
 
 namespace App\Infrastructure\Persistence\Eloquent;
 

@@ -1,6 +1,7 @@
 <?php
 namespace Application\Service;
 
+use Application\Contracts\ProductServiceInterface;
 use Application\UseCase\CreateProductUseCase;
 use Application\UseCase\UpdateProductUseCase;
 use Application\UseCase\DeleteProductUseCase;
@@ -12,22 +13,22 @@ use Domain\ValueObject\Price;
 use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
 
-class ProductApplicationService
+class ProductApplicationService implements ProductServiceInterface
 {
-    private CreateProductUseCase $createProductUseCase ;
+    private CreateProductUseCase $createProductUseCase;
     private UpdateProductUseCase $updateUseCase;
     private DeleteProductUseCase $deleteUseCase;
     private GetProductUseCase $getUseCase;
     private ListProductUseCase $listUseCase;
 
     public function __construct(
-        CreateProductUseCase $registerUseCase,
+        CreateProductUseCase $createProductUseCase,
         UpdateProductUseCase $updateUseCase,
         DeleteProductUseCase $deleteUseCase,
         GetProductUseCase $getUseCase,
         ListProductUseCase $listUseCase
     ) {
-        $this->registerUseCase = $registerUseCase;
+        $this->createProductUseCase = $createProductUseCase;
         $this->updateUseCase = $updateUseCase;
         $this->deleteUseCase = $deleteUseCase;
         $this->getUseCase = $getUseCase;
@@ -37,7 +38,7 @@ class ProductApplicationService
     public function registerProduct(array $data): Product
     {
         $product = $this->mapDataToProduct($data);
-        return $this->registerUseCase->execute($product);
+        return $this->createProductUseCase->execute($product);
     }
 
     public function updateProduct(int $id, array $data): Product
@@ -47,9 +48,9 @@ class ProductApplicationService
         return $this->updateUseCase->execute($product);
     }
 
-    public function deleteProduct(int $id): bool
+    public function deleteProduct(int $id): void
     {
-        return $this->deleteUseCase->execute($id);
+        $this->deleteUseCase->execute($id);
     }
 
     public function getProduct(int $id): ?Product
@@ -57,7 +58,7 @@ class ProductApplicationService
         return $this->getUseCase->execute($id);
     }
 
-    public function listProducts(int $page, int $size, ?string $search = null): array
+    public function listAll(int $page, int $size, ?string $search = null): array
     {
         return $this->listUseCase->execute($page, $size, $search);
     }
@@ -92,9 +93,8 @@ class ProductApplicationService
             $data['company_id'] ?? null,
             $data['branch_id'] ?? null,
             $data['warehouse_id'] ?? null,
-            
             $attributes
         );
     }
-    }
+}
 

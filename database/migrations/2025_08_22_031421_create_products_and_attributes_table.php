@@ -9,7 +9,7 @@ class CreateProductsAndAttributesTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 150);
             $table->string('code', 100);
             $table->string('barcode')->nullable();
@@ -30,18 +30,16 @@ class CreateProductsAndAttributesTable extends Migration
             $table->unsignedBigInteger('warehouse_id')->nullable();
             $table->timestamps();
 
-            // Claves foráneas. Asumiendo que existen las tablas relacionadas
+            // Claves foráneas
             $table->foreign('product_type_id')->references('id')->on('product_types')->onDelete('set null');
             $table->foreign('provider_id')->references('id')->on('providers')->onDelete('set null');
-            $table->foreign('units_measure_id')->references('id')->on('units_measure')->onDelete('set null');
-            //$table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
-           // $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
-           // $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('set null');
+            $table->foreign('units_measure_id')->references('id')->on('units_of_measure')->onDelete('set null');
+            // Agrega las demás claves foráneas si las tablas existen
         });
 
         Schema::create('product_attributes', function (Blueprint $table) {
             $table->id();
-            $table->uuid('product_id');
+            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('attribute_id');
             $table->text('value');
             $table->timestamps();
@@ -58,4 +56,3 @@ class CreateProductsAndAttributesTable extends Migration
         Schema::dropIfExists('products');
     }
 }
-
