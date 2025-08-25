@@ -2,11 +2,15 @@
 
 namespace App\Providers;
 use App\Domain\IRepository\ICategoryRepository;
-use \App\Infrastructure\Persistence\CategoryRepository;
+use App\Infrastructure\Persistence\CategoryRepository;
 use App\Domain\IRepository\ICategoryAttributeRepository;
 use App\Infrastructure\Persistence\CategoryAttributeRepository;
 use App\Application\Contracts\ProductServiceInterface;
 use App\Application\Services\ProductApplicationService;
+use App\Domain\IRepository\IProductRepository;
+use App\Infrastructure\Persistence\ProductRepository;
+
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
       ProductServiceInterface::class,
       ProductService::class
     );*/
+     $this->app->bind(IProductRepository::class, ProductRepository::class);
 
   }
   /**

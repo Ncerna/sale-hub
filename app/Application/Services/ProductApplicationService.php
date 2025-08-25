@@ -1,12 +1,12 @@
 <?php
-namespace App\Application\Service;
+namespace App\Application\Services;
 
 use App\Application\Contracts\ProductServiceInterface;
-use Application\UseCase\CreateProductUseCase;
-use Application\UseCase\UpdateProductUseCase;
-use Application\UseCase\DeleteProductUseCase;
-use Application\UseCase\GetProductUseCase;
-use Application\UseCase\ListProductUseCase;
+use App\Application\UseCase\CreateProductUseCase;
+use App\Application\UseCase\UpdateProductUseCase;
+use App\Application\UseCase\DeleteProductUseCase;
+use App\Application\UseCase\GetProductUseCase;
+use App\Application\UseCase\ListProductUseCase;
 use Domain\Entity\Product;
 use Domain\Entity\ProductAttribute;
 use Domain\ValueObject\Price;
