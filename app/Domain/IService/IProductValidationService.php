@@ -1,7 +1,7 @@
 <?php
-namespace Domain\IService;
+namespace App\Domain\IService;
 
-use Domain\Entity\Product;
+use App\Domain\Entity\Product;
 
 interface IProductValidationService
 {

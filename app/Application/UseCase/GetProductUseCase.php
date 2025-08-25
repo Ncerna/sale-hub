@@ -1,8 +1,8 @@
 <?php
 namespace App\Application\UseCase;
 
-use Domain\IRepository\IProductRepository;
-use Domain\Entity\Product;
+use App\Domain\IRepository\IProductRepository;
+use App\Domain\Entity\Product;
 
 class GetProductUseCase
 {

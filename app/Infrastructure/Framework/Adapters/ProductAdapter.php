@@ -1,8 +1,10 @@
 <?php
-namespace Infrastructure\Framework\Adapters;
-use Infrastructure\Persistence\EloquentProduct;
-use Infrastructure\Persistence\EloquentProductAttribute;
-use Domain\Entity\Product;
+namespace App\Infrastructure\Framework\Adapters;
+
+
+use App\Infrastructure\Persistence\EloquentProduct;
+use App\Infrastructure\Persistence\EloquentProductAttribute;
+use App\Domain\Entity\Product;
 use Domain\Entity\ProductAttribute;
 use Domain\ValueObject\Price;
 use Domain\ValueObject\IGVRate;

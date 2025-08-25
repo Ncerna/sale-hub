@@ -1,9 +1,10 @@
 <?php
 namespace App\Application\UseCase;
 
-use Domain\Entity\Product;
-use Domain\IRepository\IProductRepository;
-use Domain\IService\IProductValidationService;
+use App\Domain\Entity\Product;
+use App\Domain\IRepository\IProductRepository;
+use App\Domain\IService\IProductValidationService;
+
 
 class CreateProductUseCase
 {

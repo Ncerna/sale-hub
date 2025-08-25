@@ -1,7 +1,7 @@
 <?php
 namespace App\Application\UseCase;
 
-use Domain\IRepository\IProductRepository;
+use App\Domain\IRepository\IProductRepository;
 
 class DeleteProductUseCase
 {

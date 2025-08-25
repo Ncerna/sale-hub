@@ -1,9 +1,9 @@
 <?php
 namespace App\Application\UseCase;
 
-use Domain\IRepository\IProductRepository;
-use Domain\IService\IProductValidationService;
-use Domain\Entity\Product;
+use App\Domain\IRepository\IProductRepository;
+use App\Domain\IService\IProductValidationService;
+use App\Domain\Entity\Product;
 
 class UpdateProductUseCase
 {
@@ -22,6 +22,6 @@ class UpdateProductUseCase
             throw new \Exception("Product validation failed.");
         }
 
-       return $this->productRepository->update($product);
+       return $this->productRepository->save($product);
     }
 }

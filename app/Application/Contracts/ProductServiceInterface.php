@@ -1,7 +1,7 @@
 <?php
 namespace App\Application\Contracts;
 
-use Domain\Entity\Product;
+use App\Domain\Entity\Product;
 
 interface ProductServiceInterface
 {

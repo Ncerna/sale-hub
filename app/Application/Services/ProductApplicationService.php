@@ -7,11 +7,11 @@ use App\Application\UseCase\UpdateProductUseCase;
 use App\Application\UseCase\DeleteProductUseCase;
 use App\Application\UseCase\GetProductUseCase;
 use App\Application\UseCase\ListProductUseCase;
-use Domain\Entity\Product;
-use Domain\Entity\ProductAttribute;
-use Domain\ValueObject\Price;
-use Domain\ValueObject\IGVRate;
-use Domain\ValueObject\IGVAffectationCode;
+use App\Domain\Entity\Product;
+use App\Domain\Entity\ProductAttribute;
+use App\Domain\ValueObject\Price;
+use App\Domain\ValueObject\IGVRate;
+use App\Domain\ValueObject\IGVAffectationCode;
 
 class ProductApplicationService implements ProductServiceInterface
 {
@@ -74,7 +74,7 @@ class ProductApplicationService implements ProductServiceInterface
         }
 
         return new Product(
-            $data['id'] ?? uniqid(),
+            $data['id'] ?? null,
             $data['name'],
             $data['code'],
             $data['barcode'] ?? null,

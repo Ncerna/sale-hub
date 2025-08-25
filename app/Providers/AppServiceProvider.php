@@ -8,7 +8,10 @@ use App\Infrastructure\Persistence\CategoryAttributeRepository;
 use App\Application\Contracts\ProductServiceInterface;
 use App\Application\Services\ProductApplicationService;
 use App\Domain\IRepository\IProductRepository;
-use App\Infrastructure\Persistence\ProductRepository;
+use App\Infrastructure\Persistence\Repository\ProductRepository;
+
+use App\Domain\IService\IProductValidationService;
+use App\Application\Services\ProductValidationService;
 
 
 use Illuminate\Support\ServiceProvider;
@@ -27,12 +30,9 @@ class AppServiceProvider extends ServiceProvider
 
 
      $this->app->bind(ProductServiceInterface::class, ProductApplicationService::class);
-   /* $this->app->bind(
-      ProductServiceInterface::class,
-      ProductService::class
-    );*/
+ 
      $this->app->bind(IProductRepository::class, ProductRepository::class);
-
+     $this->app->bind(IProductValidationService::class, ProductValidationService::class);
   }
   /**
    * Bootstrap any application services.

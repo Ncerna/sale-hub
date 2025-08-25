@@ -1,10 +1,11 @@
 <?php
 
-namespace Infrastructure\Persistence;
-use Domain\Entity\Product;
-use Domain\IRepository\IProductRepository;
-use Infrastructure\Persistence\EloquentProduct;
-use Infrastructure\Framework\Adapters\ProductAdapter;
+namespace App\Infrastructure\Persistence\Repository;
+use App\Domain\Entity\Product;
+use App\Infrastructure\Persistence\EloquentProduct;
+use App\Infrastructure\Framework\Adapters\ProductAdapter;
+use App\Domain\IRepository\IProductRepository;
+
 
 class ProductRepository implements IProductRepository
 {

@@ -1,8 +1,7 @@
 <?php
 namespace App\Domain\IRepository;
 
-
-use Domain\Entity\Product;
+use App\Domain\Entity\Product;
 interface IProductRepository
 {
     public function save(Product $product): Product;

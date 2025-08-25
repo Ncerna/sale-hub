@@ -1,7 +1,8 @@
 <?php
-namespace Domain\Entity;
+namespace App\Domain\Entity;
 
 use Domain\ValueObject\Price;
+use Domain\Entity\ProductAttribute;
 use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
 
