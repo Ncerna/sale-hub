@@ -2,13 +2,13 @@
 namespace App\Infrastructure\Framework\Adapters;
 
 
-use App\Infrastructure\Persistence\EloquentProduct;
-use App\Infrastructure\Persistence\EloquentProductAttribute;
+use App\Infrastructure\Persistence\Eloquent\EloquentProduct;
+use App\Infrastructure\Persistence\Eloquent\EloquentProductAttribute;
 use App\Domain\Entity\Product;
-use Domain\Entity\ProductAttribute;
-use Domain\ValueObject\Price;
-use Domain\ValueObject\IGVRate;
-use Domain\ValueObject\IGVAffectationCode;
+use App\Domain\Entity\ProductAttribute;
+use App\Domain\ValueObject\Price;
+use App\Domain\ValueObject\IGVRate;
+use App\Domain\ValueObject\IGVAffectationCode;
 
 class ProductAdapter
 {
@@ -29,13 +29,13 @@ class ProductAdapter
         }
 
         return new Product(
-            $eloquentProduct->id,
+            $eloquentProduct->id?? null,
             $eloquentProduct->name,
             $eloquentProduct->code,
             $eloquentProduct->barcode,
             $eloquentProduct->description,
-            new Price($eloquentProduct->unit_price),
-            $eloquentProduct->offer_price ? new Price($eloquentProduct->offer_price) : null,
+            new Price($eloquentProduct->unit_price,new IGVRate(0)),
+            $eloquentProduct->offer_price ? new Price($eloquentProduct->offer_price,new IGVRate(0)) : null,
             new IGVRate($eloquentProduct->igv_rate),
             new IGVAffectationCode($eloquentProduct->igv_affectation_code),
             $eloquentProduct->stock,

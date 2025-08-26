@@ -22,6 +22,7 @@ class CreateProductUseCase
         if (!$this->validationService->validate($product)) {
             throw new \Exception("Product validation failed");
         }
+        
 
         return $this->productRepository->save($product);
     }

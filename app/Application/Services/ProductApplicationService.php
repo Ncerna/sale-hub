@@ -64,37 +64,39 @@ class ProductApplicationService implements ProductServiceInterface
     }
 
     private function mapDataToProduct(array $data): Product
-    {
-        $attributes = [];
-        foreach (($data['attributes'] ?? []) as $attr) {
-            $attributes[] = new ProductAttribute(
-                $attr['attributeId'],
-                $attr['value']
-            );
-        }
-
-        return new Product(
-            $data['id'] ?? null,
-            $data['name'],
-            $data['code'],
-            $data['barcode'] ?? null,
-            $data['description'] ?? null,
-            new Price($data['unitPrice']),
-            isset($data['offerPrice']) ? new Price($data['offerPrice']) : null,
-            new IGVRate($data['igvRate']),
-            new IGVAffectationCode($data['igvAffectationCode']),
-            $data['stock'],
-            $data['minimumStock'],
-            $data['photo'] ?? null,
-            $data['productTypeId'] ?? null,
-            $data['providerId'] ?? null,
-            $data['unitsMeasureId'] ?? null,
-            $data['status'] ?? 1,
-            $data['company_id'] ?? null,
-            $data['branch_id'] ?? null,
-            $data['warehouse_id'] ?? null,
-            $attributes
+{
+    $attributes = [];
+    foreach (($data['attributes'] ?? []) as $attr) {
+        $attributes[] = new ProductAttribute(
+            $attr['attribute_id'],
+            $attr['value']
         );
     }
+    $igvRateValue = ($data['igv_rate'] ?? 0) / 100;
+    $igvRate = new IGVRate($igvRateValue);
+    return new Product(
+        $data['id'] ?? null,
+        $data['name'],
+        $data['code'],
+        $data['barcode'] ?? null,
+        $data['description'] ?? null,
+        $price = new Price($data['unit_price'], $igvRate),
+        isset($data['offer_price']) ? new Price($data['offer_price'],$igvRate) : null,
+        new IGVRate($data['igv_rate']),
+        new IGVAffectationCode($data['igv_affectation_code']),
+        $data['stock'],
+        $data['minimum_stock'],
+        $data['photo'] ?? null,
+        $data['product_type_id'] ?? null,
+        $data['provider_id'] ?? null,
+        $data['units_measure_id'] ?? null,
+        $data['status'] ?? 1,
+        $data['company_id'] ?? null,
+        $data['branch_id'] ?? null,
+        $data['warehouse_id'] ?? null,
+        $attributes
+    );
+}
+
 }
 

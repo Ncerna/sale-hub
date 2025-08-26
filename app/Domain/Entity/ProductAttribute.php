@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Entity;
+namespace App\Domain\Entity;
 
 class ProductAttribute
 {

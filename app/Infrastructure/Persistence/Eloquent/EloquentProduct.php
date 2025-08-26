@@ -1,5 +1,5 @@
 <?php
-namespace App\Infrastructure\Persistence;
+namespace App\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 class EloquentProduct extends Model

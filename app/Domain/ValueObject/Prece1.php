@@ -1,10 +1,10 @@
 <?php
 
-namespace Domain\ValueObject;
+namespace App\Domain\ValueObject;
 
 use InvalidArgumentException;
 
-class Price
+class Price1
 {
     private float $amount;
 

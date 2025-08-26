@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Repository;
 use App\Domain\Entity\Product;
-use App\Infrastructure\Persistence\EloquentProduct;
+use App\Infrastructure\Persistence\Eloquent\EloquentProduct;
 use App\Infrastructure\Framework\Adapters\ProductAdapter;
 use App\Domain\IRepository\IProductRepository;
 

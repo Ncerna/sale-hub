@@ -1,5 +1,5 @@
 <?php
-namespace Domain\ValueObject;
+namespace App\Domain\ValueObject;
 
 class Money
 {

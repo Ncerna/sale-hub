@@ -1,14 +1,14 @@
 <?php
 namespace App\Domain\Entity;
 
-use Domain\ValueObject\Price;
-use Domain\Entity\ProductAttribute;
-use Domain\ValueObject\IGVRate;
-use Domain\ValueObject\IGVAffectationCode;
+use  App\Domain\ValueObject\Price;
+use  App\Domain\Entity\ProductAttribute;
+use  App\Domain\ValueObject\IGVRate;
+use  App\Domain\ValueObject\IGVAffectationCode;
 
 class Product
 {
-    private string $id;
+    private ?string $id= null;
     private string $name;
     private string $code;
     private ?string $barcode;
@@ -39,7 +39,7 @@ class Product
 
 
     public function __construct(
-        string $id,
+        string|int|null $id,
         string $name,
         string $code,
         ?string $barcode,
@@ -83,7 +83,7 @@ class Product
     }
 
     // Getters
-    public function getId(): string { return $this->id; }
+    public function getId(): ?string { return $this->id; }
     public function getName(): string { return $this->name; }
     public function getCode(): string { return $this->code; }
     public function getBarcode(): ?string { return $this->barcode; }

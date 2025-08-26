@@ -1,6 +1,6 @@
 <?php
 namespace App\Infrastructure\Framework\Controller;
-
+use Illuminate\Support\Facades\Log;
 use App\Application\Contracts\ProductServiceInterface;
 use Illuminate\Http\Request;
 
@@ -26,8 +26,10 @@ class ProductController
     public function store(Request $request)
     {
         $data = $request->all();
+         Log::info('Entrando al controlador store() con datos:', $request->all());
         $product = $this->productService->registerProduct($data);
-        return response()->json(['product' => $product]);
+        return response()->json(['product' => $product],201);
+      
     }
 
     public function show($id)

@@ -452,3 +452,6 @@ class ProductFactory
         return new ProductApplicationService($repository);
     }
 }
+
+
+https://www.perplexity.ai/search/es-posible-crear-multitenan-en-uaCNCM7cR32B5KoN_I8WmQ
