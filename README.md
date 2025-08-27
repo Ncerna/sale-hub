@@ -19,10 +19,8 @@ La arquitectura mostrada corresponde a una Arquitectura Hexagonal o también con
 Es un Diagrama de Clases UML con paquetes agrupados por capa
 
 @startuml
-' Cambiamos el layout a dirección de arriba hacia abajo
 left to right direction
 
-' DOMINIO
 package "Domain" {
     interface IProductRepository
     interface IProductValidationService
@@ -34,8 +32,8 @@ package "Domain" {
     class IGVAffectationCode
 }
 
-' APLICACIÓN
 package "Application" {
+
     package "Contracts" {
         interface ProductServiceInterface
     }
@@ -56,7 +54,6 @@ package "Application" {
         CreateProductUseCase --> IProductValidationService
     }
 
-    ' Relaciones internas de Application
     ProductApplicationService --> CreateProductUseCase
     ProductApplicationService --> UpdateProductUseCase
     ProductApplicationService --> DeleteProductUseCase
@@ -64,8 +61,8 @@ package "Application" {
     ProductApplicationService --> ListProductUseCase
 }
 
-' INFRAESTRUCTURA
 package "Infrastructure" {
+
     package "Framework::Controller" {
         class ProductController
         ProductController --> ProductServiceInterface : injects
@@ -84,6 +81,7 @@ package "Infrastructure" {
 }
 
 @enduml
+
 
 
 Diagrama de Componentes UML (en PlantUML)
@@ -116,11 +114,7 @@ package "Domain" {
 @enduml
 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
 ## Laravel Sponsors
 
