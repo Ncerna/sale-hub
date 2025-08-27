@@ -11,10 +11,110 @@
 
 La arquitectura mostrada corresponde a una Arquitectura Hexagonal o también conocida como Arquitectura de Puertos y Adaptadores combinada con principios de Arquitectura en Capas y conceptos de Domain-Driven Design (DDD).
 
-https://uml.planttext.com/plantuml/png/bLLBJkGm4Dstb3kKsB220sI1YD83YiGqhK2phtOgO73Yo7P0Q8PJp57c25nid4_dqua3awNhLVczgdhEfJQeJ9a9RtKA8MPxZfdKG084lilI04B25J76F__ca12WKdoFy8IC8-0UdwMt4fGQC18KVtmo3TvmcNkhgkZwzcUqYMwzLO7i1Hy9JjOoGvwVm2zl1VRZkI6L8YE8jaec9JCn5L9p8zMx2_60WYTONN97wfKpgkwge4oWrj2YPeu2Oop_qj0uLbVe3wBhXnZDyL6GfbPOVMie4nlzQ1G6svie3CBeyyzce38e2i5PZUwaTi5GvaOXCxeBZNMsR5jnqU6yWNuSn7RbMjousbXtpwRhs07eXC3v-U-B_-MoqnIYfXageIBRrBPS2pl6x8haIyoQ17s5kIQp3BZXUeBeCNDKuUpimhcYtqgQsTfH3qyX9c6D9NFIpJBag2lJ3KRJ8DqZg-vpDtevpztyvJptG9Rp74DQJfeRN6l4Q7CL1p_kxkDTUB-BWu4PepnLg8soIQMYgH-l56Rq9jMBxzVMb4AGShkfnqnSr8TgjWxpW6_d-snV4-soqPQKjaefP-Jx_RQvESrjv2JKEDgrn5CMWxu42HQM_T8Rqo2EQaqv3FhIfjXsb9fqEyXBofFwZ_GF
+
 
 ![alt text][https://uml.planttext.com/plantuml/png/bLLBJkGm4Dstb3kKsB220sI1YD83YiGqhK2phtOgO73Yo7P0Q8PJp57c25nid4_dqua3awNhLVczgdhEfJQeJ9a9RtKA8MPxZfdKG084lilI04B25J76F__ca12WKdoFy8IC8-0UdwMt4fGQC18KVtmo3TvmcNkhgkZwzcUqYMwzLO7i1Hy9JjOoGvwVm2zl1VRZkI6L8YE8jaec9JCn5L9p8zMx2_60WYTONN97wfKpgkwge4oWrj2YPeu2Oop_qj0uLbVe3wBhXnZDyL6GfbPOVMie4nlzQ1G6svie3CBeyyzce38e2i5PZUwaTi5GvaOXCxeBZNMsR5jnqU6yWNuSn7RbMjousbXtpwRhs07eXC3v-U-B_-MoqnIYfXageIBRrBPS2pl6x8haIyoQ17s5kIQp3BZXUeBeCNDKuUpimhcYtqgQsTfH3qyX9c6D9NFIpJBag2lJ3KRJ8DqZg-vpDtevpztyvJptG9Rp74DQJfeRN6l4Q7CL1p_kxkDTUB-BWu4PepnLg8soIQMYgH-l56Rq9jMBxzVMb4AGShkfnqnSr8TgjWxpW6_d-snV4-soqPQKjaefP-Jx_RQvESrjv2JKEDgrn5CMWxu42HQM_T8Rqo2EQaqv3FhIfjXsb9fqEyXBofFwZ_GF]
 ## Learning Laravel
+
+Es un Diagrama de Clases UML con paquetes agrupados por capa
+
+@startuml
+' Cambiamos el layout a dirección de arriba hacia abajo
+left to right direction
+
+' DOMINIO
+package "Domain" {
+    interface IProductRepository
+    interface IProductValidationService
+
+    class Product
+    class ProductAttribute
+    class Price
+    class IGVRate
+    class IGVAffectationCode
+}
+
+' APLICACIÓN
+package "Application" {
+    package "Contracts" {
+        interface ProductServiceInterface
+    }
+
+    package "Services" {
+        class ProductApplicationService
+        ProductApplicationService ..|> ProductServiceInterface
+    }
+
+    package "UseCase" {
+        class CreateProductUseCase
+        class UpdateProductUseCase
+        class DeleteProductUseCase
+        class GetProductUseCase
+        class ListProductUseCase
+
+        CreateProductUseCase --> IProductRepository
+        CreateProductUseCase --> IProductValidationService
+    }
+
+    ' Relaciones internas de Application
+    ProductApplicationService --> CreateProductUseCase
+    ProductApplicationService --> UpdateProductUseCase
+    ProductApplicationService --> DeleteProductUseCase
+    ProductApplicationService --> GetProductUseCase
+    ProductApplicationService --> ListProductUseCase
+}
+
+' INFRAESTRUCTURA
+package "Infrastructure" {
+    package "Framework::Controller" {
+        class ProductController
+        ProductController --> ProductServiceInterface : injects
+    }
+
+    package "Persistence::Repository" {
+        class ProductRepository
+        ProductRepository ..|> IProductRepository
+    }
+
+    package "Framework::Adapters" {
+        class ProductAdapter
+    }
+
+    ProductRepository --> ProductAdapter : uses
+}
+
+@enduml
+
+
+Diagrama de Componentes UML (en PlantUML)
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+package "Infrastructure" {
+  [ProductController] --> [ProductServiceInterface]
+  [ProductRepository] --> [ProductAdapter]
+  [ProductRepository] ..> [IProductRepository] : implements
+}
+
+package "Application" {
+  [ProductApplicationService] ..> [ProductServiceInterface] : implements
+  [ProductApplicationService] --> [CreateProductUseCase]
+  [ProductApplicationService] --> [UpdateProductUseCase]
+  [CreateProductUseCase] --> [IProductRepository]
+  [CreateProductUseCase] --> [IProductValidationService]
+}
+
+package "Domain" {
+  [IProductRepository] <<interface>>
+  [IProductValidationService] <<interface>>
+  [Product]
+  [Price]
+  [IGVRate]
+}
+@enduml
+
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
