@@ -4,11 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 class EloquentProduct extends Model
 {
-    protected $table = 'products';  // Nombre de la tabla en la base de datos
-
-    // Campos que se pueden asignar masivamente
+    protected $table = 'products';  
     protected $fillable = [
-        'id',
         'name',
         'code',
         'barcode',
@@ -28,10 +25,7 @@ class EloquentProduct extends Model
         'branch_id',
         'warehouse_id',
     ];
-
     public $timestamps = true;
-
-    // Relación con atributos del producto
     public function attributes(): HasMany
     {
         return $this->hasMany(EloquentProductAttribute::class, 'product_id', 'id');

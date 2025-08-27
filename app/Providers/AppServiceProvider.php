@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 use Domain\IRepository\ICategoryRepository;
-use Infrastructure\Persistence\CategoryRepository;
+use Infrastructure\Persistence\Repository\CategoryRepository;
 use Domain\IRepository\ICategoryAttributeRepository;
-use Infrastructure\Persistence\CategoryAttributeRepository;
+use Infrastructure\Persistence\Repository\CategoryAttributeRepository;
 use Application\Contracts\ProductServiceInterface;
 use Application\Services\ProductApplicationService;
 use Domain\IRepository\IProductRepository;

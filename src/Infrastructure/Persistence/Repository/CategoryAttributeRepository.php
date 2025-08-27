@@ -1,10 +1,9 @@
 <?php
-namespace Infrastructure\Persistence;
 
+namespace Infrastructure\Persistence\Repository;
 use Domain\Entity\CategoryAttribute;
+use Infrastructure\Persistence\Eloquent\EloquentCategoryAttribute;
 use Domain\IRepository\ICategoryAttributeRepository;
-use App\Models\EloquentCategoryAttribute;
-
 class CategoryAttributeRepository implements ICategoryAttributeRepository
 {
     public function save(CategoryAttribute $attribute): void

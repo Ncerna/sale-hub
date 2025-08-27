@@ -1,9 +1,9 @@
 <?php
-namespace Infrastructure\Persistence;
 
+namespace Infrastructure\Persistence\Repository;
 use Domain\Entity\Category;
+use Infrastructure\Persistence\Eloquent\EloquentCategory;
 use Domain\IRepository\ICategoryRepository;
-use App\Models\EloquentCategory;
 
 class CategoryRepository implements ICategoryRepository
 {
