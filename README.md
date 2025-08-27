@@ -11,47 +11,9 @@
 
 La arquitectura mostrada corresponde a una Arquitectura Hexagonal o también conocida como Arquitectura de Puertos y Adaptadores combinada con principios de Arquitectura en Capas y conceptos de Domain-Driven Design (DDD).
 
-sale-hub/
-├── App/                                      # Código de arranque de la aplicación (opcional según framework)
-├── config/                                   # Configuraciones (database, app, servicios, etc.)
-├── public/                                   # Punto de entrada web (index.php, assets públicos)
-├── routes/                                   # Definición de rutas (web.php, api.php, etc.)
-├── storage/                                  # Archivos temporales, logs, caché, etc.
-├── tests/                                    # Pruebas unitarias y funcionales
-├── vendor/                                   # Librerías instaladas por Composer
-├── .env                                      # Variables de entorno (no subir al repositorio)
-├── composer.json                             # Archivo de dependencias del proyecto
-├── src/                                      # Código fuente principal del proyecto
-│
-│   ├── Domain/                               # Capa de dominio (lógica de negocio)
-│   │   ├── Entity/                           # Entidades del dominio (Sale.php, User.php, etc.)
-│   │   ├── ValueObject/                      # Objetos de valor (ID, Email, etc.)
-│   │   ├── IRepository/                      # Interfaces de repositorios
-│   │   └── IService/                         # Interfaces de servicios de dominio
-│
-│   ├── Application/                          # Capa de aplicación (coordinación de casos de uso)
-│   │   ├── UseCase/                          # Casos de uso de negocio
-│   │   ├── Service/                          # Servicios de aplicación (interactúan con dominio)
-│   │   ├── DTO/                              # Objetos de transferencia de datos
-│   │   └── Command/                          # Comandos o solicitudes específicas (opcional)
-│
-│   └── Infrastructure/                       # Capa de infraestructura
-│       ├── Persistence/                      # Persistencia de datos
-│       │   ├── Eloquent/                     # Implementación con Eloquent ORM
-│       │   ├── Doctrine/                     # Implementación con Doctrine ORM
-│       │   ├── OtherORM/                     # Otros ORM o motores de persistencia
-│       │   └── Repository/                   # Repositorios concretos que implementan IRepository
-│       │
-│       ├── ApiClients/                       # Clientes para consumir APIs externas
-│       ├── ServiceImplementations/           # Implementaciones concretas de servicios
-│       ├── Connections/                      # Conexiones a bases de datos, colas, etc.
-│       └── Framework/                        # Adaptadores específicos del framework
-│           ├── Controller/                   # Controladores HTTP
-│           ├── Middleware/                   # Middlewares
-│           ├── Adapters/                     # Adaptadores (ej: para mensajería, colas)
-│           └── Factories/                    # Fábricas de clases o servicios
+https://uml.planttext.com/plantuml/png/bLLBJkGm4Dstb3kKsB220sI1YD83YiGqhK2phtOgO73Yo7P0Q8PJp57c25nid4_dqua3awNhLVczgdhEfJQeJ9a9RtKA8MPxZfdKG084lilI04B25J76F__ca12WKdoFy8IC8-0UdwMt4fGQC18KVtmo3TvmcNkhgkZwzcUqYMwzLO7i1Hy9JjOoGvwVm2zl1VRZkI6L8YE8jaec9JCn5L9p8zMx2_60WYTONN97wfKpgkwge4oWrj2YPeu2Oop_qj0uLbVe3wBhXnZDyL6GfbPOVMie4nlzQ1G6svie3CBeyyzce38e2i5PZUwaTi5GvaOXCxeBZNMsR5jnqU6yWNuSn7RbMjousbXtpwRhs07eXC3v-U-B_-MoqnIYfXageIBRrBPS2pl6x8haIyoQ17s5kIQp3BZXUeBeCNDKuUpimhcYtqgQsTfH3qyX9c6D9NFIpJBag2lJ3KRJ8DqZg-vpDtevpztyvJptG9Rp74DQJfeRN6l4Q7CL1p_kxkDTUB-BWu4PepnLg8soIQMYgH-l56Rq9jMBxzVMb4AGShkfnqnSr8TgjWxpW6_d-snV4-soqPQKjaefP-Jx_RQvESrjv2JKEDgrn5CMWxu42HQM_T8Rqo2EQaqv3FhIfjXsb9fqEyXBofFwZ_GF
 
-
+![alt text][https://uml.planttext.com/plantuml/png/bLLBJkGm4Dstb3kKsB220sI1YD83YiGqhK2phtOgO73Yo7P0Q8PJp57c25nid4_dqua3awNhLVczgdhEfJQeJ9a9RtKA8MPxZfdKG084lilI04B25J76F__ca12WKdoFy8IC8-0UdwMt4fGQC18KVtmo3TvmcNkhgkZwzcUqYMwzLO7i1Hy9JjOoGvwVm2zl1VRZkI6L8YE8jaec9JCn5L9p8zMx2_60WYTONN97wfKpgkwge4oWrj2YPeu2Oop_qj0uLbVe3wBhXnZDyL6GfbPOVMie4nlzQ1G6svie3CBeyyzce38e2i5PZUwaTi5GvaOXCxeBZNMsR5jnqU6yWNuSn7RbMjousbXtpwRhs07eXC3v-U-B_-MoqnIYfXageIBRrBPS2pl6x8haIyoQ17s5kIQp3BZXUeBeCNDKuUpimhcYtqgQsTfH3qyX9c6D9NFIpJBag2lJ3KRJ8DqZg-vpDtevpztyvJptG9Rp74DQJfeRN6l4Q7CL1p_kxkDTUB-BWu4PepnLg8soIQMYgH-l56Rq9jMBxzVMb4AGShkfnqnSr8TgjWxpW6_d-snV4-soqPQKjaefP-Jx_RQvESrjv2JKEDgrn5CMWxu42HQM_T8Rqo2EQaqv3FhIfjXsb9fqEyXBofFwZ_GF]
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
@@ -90,3 +52,6 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+[def]: img.png
