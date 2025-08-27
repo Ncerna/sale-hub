@@ -1,5 +1,4 @@
 <?php
-
 namespace Domain\Entity;
 use Domain\Entity\Role;
 
@@ -17,5 +16,101 @@ class User {
     private string $path_photo;
     private string $path_qr;
 
-    // Constructor, getters y setters aquí
+    // Getters and Setters
+
+    public function getId(): string {
+        return $this->id;
+    }
+    public function setId(string $id): self {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getFirstName(): string {
+        return $this->first_name;
+    }
+    public function setFirstName(string $first_name): self {
+        $this->first_name = $first_name;
+        return $this;
+    }
+
+    public function getLastName(): string {
+        return $this->last_name;
+    }
+    public function setLastName(string $last_name): self {
+        $this->last_name = $last_name;
+        return $this;
+    }
+
+    public function getUsername(): string {
+        return $this->username;
+    }
+    public function setUsername(string $username): self {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function getPassword(): string {
+        return $this->password;
+    }
+    public function setPassword(string $password): self {
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getEmail(): string {
+        return $this->email;
+    }
+    public function setEmail(string $email): self {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getPhoneNumber(): string {
+        return $this->phone_number;
+    }
+    public function setPhoneNumber(string $phone_number): self {
+        $this->phone_number = $phone_number;
+        return $this;
+    }
+
+    public function getAddress(): string {
+        return $this->address;
+    }
+    public function setAddress(string $address): self {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getRole(): Role {
+        return $this->role;
+    }
+    public function setRole(Role $role): self {
+        $this->role = $role;
+        return $this;
+    }
+
+    public function getStatus(): int {
+        return $this->status;
+    }
+    public function setStatus(int $status): self {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getPathPhoto(): string {
+        return $this->path_photo;
+    }
+    public function setPathPhoto(string $path_photo): self {
+        $this->path_photo = $path_photo;
+        return $this;
+    }
+
+    public function getPathQr(): string {
+        return $this->path_qr;
+    }
+    public function setPathQr(string $path_qr): self {
+        $this->path_qr = $path_qr;
+        return $this;
+    }
 }
