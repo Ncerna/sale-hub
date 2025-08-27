@@ -11,15 +11,46 @@
 
 La arquitectura mostrada corresponde a una Arquitectura Hexagonal o también conocida como Arquitectura de Puertos y Adaptadores combinada con principios de Arquitectura en Capas y conceptos de Domain-Driven Design (DDD).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+sale-hub/
+├── App/                                      # Código de arranque de la aplicación (opcional según framework)
+├── config/                                   # Configuraciones (database, app, servicios, etc.)
+├── public/                                   # Punto de entrada web (index.php, assets públicos)
+├── routes/                                   # Definición de rutas (web.php, api.php, etc.)
+├── storage/                                  # Archivos temporales, logs, caché, etc.
+├── tests/                                    # Pruebas unitarias y funcionales
+├── vendor/                                   # Librerías instaladas por Composer
+├── .env                                      # Variables de entorno (no subir al repositorio)
+├── composer.json                             # Archivo de dependencias del proyecto
+├── src/                                      # Código fuente principal del proyecto
+│
+│   ├── Domain/                               # Capa de dominio (lógica de negocio)
+│   │   ├── Entity/                           # Entidades del dominio (Sale.php, User.php, etc.)
+│   │   ├── ValueObject/                      # Objetos de valor (ID, Email, etc.)
+│   │   ├── IRepository/                      # Interfaces de repositorios
+│   │   └── IService/                         # Interfaces de servicios de dominio
+│
+│   ├── Application/                          # Capa de aplicación (coordinación de casos de uso)
+│   │   ├── UseCase/                          # Casos de uso de negocio
+│   │   ├── Service/                          # Servicios de aplicación (interactúan con dominio)
+│   │   ├── DTO/                              # Objetos de transferencia de datos
+│   │   └── Command/                          # Comandos o solicitudes específicas (opcional)
+│
+│   └── Infrastructure/                       # Capa de infraestructura
+│       ├── Persistence/                      # Persistencia de datos
+│       │   ├── Eloquent/                     # Implementación con Eloquent ORM
+│       │   ├── Doctrine/                     # Implementación con Doctrine ORM
+│       │   ├── OtherORM/                     # Otros ORM o motores de persistencia
+│       │   └── Repository/                   # Repositorios concretos que implementan IRepository
+│       │
+│       ├── ApiClients/                       # Clientes para consumir APIs externas
+│       ├── ServiceImplementations/           # Implementaciones concretas de servicios
+│       ├── Connections/                      # Conexiones a bases de datos, colas, etc.
+│       └── Framework/                        # Adaptadores específicos del framework
+│           ├── Controller/                   # Controladores HTTP
+│           ├── Middleware/                   # Middlewares
+│           ├── Adapters/                     # Adaptadores (ej: para mensajería, colas)
+│           └── Factories/                    # Fábricas de clases o servicios
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
 ## Learning Laravel
 
