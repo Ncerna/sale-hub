@@ -8,11 +8,11 @@
 
 
 // src/Domain/Entities/Product.php
-namespace App\Domain\Entities;
+namespace Domain\Entities;
 
-use App\Domain\ValueObjects\Price;
-use App\Domain\ValueObjects\IGVRate;
-use App\Domain\ValueObjects\IGVAffectationCode;
+use Domain\ValueObjects\Price;
+use Domain\ValueObjects\IGVRate;
+use Domain\ValueObjects\IGVAffectationCode;
 
 class Product {
     private string $name;
@@ -73,7 +73,7 @@ class Product {
 }
 
 // src/Domain/ValueObjects/Price.php
-namespace App\Domain\ValueObjects;
+namespace Domain\ValueObjects;
 
 class Price {
     private float $amount;
@@ -91,7 +91,7 @@ class Price {
 }
 
 // src/Domain/ValueObjects/IGVRate.php
-namespace App\Domain\ValueObjects;
+namespace Domain\ValueObjects;
 
 class IGVRate {
     private float $rate;
@@ -109,7 +109,7 @@ class IGVRate {
 }
 
 // src/Domain/ValueObjects/IGVAffectationCode.php
-namespace App\Domain\ValueObjects;
+namespace Domain\ValueObjects;
 
 class IGVAffectationCode {
     private string $code;
@@ -125,9 +125,9 @@ class IGVAffectationCode {
 }
 
 // src/Domain/IRepository/ProductRepository.php
-namespace App\Domain\IRepository;
+namespace Domain\IRepository;
 
-use App\Domain\Entities\Product;
+use Domain\Entities\Product;
 
 interface ProductRepository {
     public function save(Product $product): void;
@@ -136,9 +136,9 @@ interface ProductRepository {
 }
 
 // src/Domain/IService/ProductService.php
-namespace App\Domain\IService;
+namespace Domain\IService;
 
-use App\Domain\Entities\Product;
+use Domain\Entities\Product;
 
 interface ProductService {
     public function createProduct(
@@ -159,7 +159,7 @@ interface ProductService {
 │   │   └── Command/
 
 // src/Application/Product/DTO/ProductDTO.php
-namespace App\Application\Product\DTO;
+namespace Application\Product\DTO;
 
 class ProductDTO {
     public string $name;
@@ -178,10 +178,10 @@ class ProductDTO {
 }
 
 // src/Application/Product/UseCase/CreateProductUseCase.php
-namespace App\Application\Product\UseCase;
+namespace Application\Product\UseCase;
 
-use App\Application\Product\DTO\ProductDTO;
-use App\Domain\IService\ProductService;
+use Application\Product\DTO\ProductDTO;
+use Domain\IService\ProductService;
 
 class CreateProductUseCase {
     private ProductService $productService;
@@ -203,13 +203,13 @@ class CreateProductUseCase {
 }
 
 // src/Application/Product/Service/ProductApplicationService.php
-namespace App\Application\Product\Service;
+namespace Application\Product\Service;
 
-use App\Domain\IService\ProductService;
-use App\Domain\Entities\Product;
-use App\Domain\ValueObjects\Price;
-use App\Domain\ValueObjects\IGVRate;
-use App\Domain\ValueObjects\IGVAffectationCode;
+use Domain\IService\ProductService;
+use Domain\Entities\Product;
+use Domain\ValueObjects\Price;
+use Domain\ValueObjects\IGVRate;
+use Domain\ValueObjects\IGVAffectationCode;
 
 class ProductApplicationService implements ProductService {
     private ProductService $productDomainService;
@@ -234,9 +234,9 @@ class ProductApplicationService implements ProductService {
 }
 
 // src/Application/Product/Command/CreateProductCommand.php
-namespace App\Application\Product\Command;
+namespace Application\Product\Command;
 
-use App\Application\Product\DTO\ProductDTO;
+use Application\Product\DTO\ProductDTO;
 
 class CreateProductCommand {
     private ProductDTO $productDTO;
@@ -267,11 +267,11 @@ Infrastructure/
 │   │       └── Factories/ 
 
 
-namespace App\Infrastructure\Persistence\Eloquent;
+namespace Infrastructure\Persistence\Eloquent;
 
-use App\Domain\Entities\Product;
-use App\Domain\IRepository\ProductRepository;
-use App\Infrastructure\Persistence\Eloquent\Models\ProductModel;
+use Domain\Entities\Product;
+use Domain\IRepository\ProductRepository;
+use Infrastructure\Persistence\Eloquent\Models\ProductModel;
 
 class ProductRepository implements ProductRepository
 {
@@ -297,9 +297,9 @@ class ProductRepository implements ProductRepository
 
         return new Product(
             $model->name,
-            new \App\Domain\ValueObjects\Price($model->base_price),
-            new \App\Domain\ValueObjects\IGVRate($model->igv_rate),
-            new \App\Domain\ValueObjects\IGVAffectationCode($model->igv_affectation_code),
+            new \Domain\ValueObjects\Price($model->base_price),
+            new \Domain\ValueObjects\IGVRate($model->igv_rate),
+            new \Domain\ValueObjects\IGVAffectationCode($model->igv_affectation_code),
             $model->stock
         );
     }
@@ -307,7 +307,7 @@ class ProductRepository implements ProductRepository
 
 // app/Infrastructure/Persistence/Eloquent/Models/ProductModel.php
 
-namespace App\Infrastructure\Persistence\Eloquent\Models;
+namespace Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -327,7 +327,7 @@ class ProductModel extends Model
 
 // app/Infrastructure/ApiClients/ExternalProductApiClient.php
 
-namespace App\Infrastructure\ApiClients;
+namespace Infrastructure\ApiClients;
 
 class ExternalProductApiClient
 {
@@ -341,7 +341,7 @@ class ExternalProductApiClient
 
 // app/Infrastructure/ServiceImplementations/ProductPricingService.php
 
-namespace App\Infrastructure\ServiceImplementations;
+namespace Infrastructure\ServiceImplementations;
 
 class ProductPricingService
 {
@@ -353,7 +353,7 @@ class ProductPricingService
 
 // app/Infrastructure/Connections/CustomDatabaseConnection.php
 
-namespace App\Infrastructure\Connections;
+namespace Infrastructure\Connections;
 
 use Illuminate\Support\Facades\DB;
 
@@ -367,10 +367,10 @@ class CustomDatabaseConnection
 
 // app/Infrastructure/Framework/Controller/ProductController.php
 
-namespace App\Infrastructure\Framework\Controller;
+namespace Infrastructure\Framework\Controller;
 
-use App\Application\Product\UseCase\CreateProductUseCase;
-use App\Application\Product\DTO\ProductDTO;
+use Application\Product\UseCase\CreateProductUseCase;
+use Application\Product\DTO\ProductDTO;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -400,7 +400,7 @@ class ProductController extends Controller
 
 // app/Infrastructure/Framework/Middleware/CheckProductStock.php
 
-namespace App\Infrastructure\Framework\Middleware;
+namespace Infrastructure\Framework\Middleware;
 
 use Closure;
 
@@ -418,10 +418,10 @@ class CheckProductStock
 
 // app/Infrastructure/Framework/Adapters/ProductRequestAdapter.php
 
-namespace App\Infrastructure\Framework\Adapters;
+namespace Infrastructure\Framework\Adapters;
 
 use Illuminate\Http\Request;
-use App\Application\Product\DTO\ProductDTO;
+use Application\Product\DTO\ProductDTO;
 
 class ProductRequestAdapter
 {
@@ -439,10 +439,10 @@ class ProductRequestAdapter
 
 // app/Infrastructure/Framework/Factories/ProductFactory.php
 
-namespace App\Infrastructure\Framework\Factories;
+namespace Infrastructure\Framework\Factories;
 
-use App\Infrastructure\Persistence\Eloquent\ProductRepository;
-use App\Application\Product\Service\ProductApplicationService;
+use Infrastructure\Persistence\Eloquent\ProductRepository;
+use Application\Product\Service\ProductApplicationService;
 
 class ProductFactory
 {
@@ -454,4 +454,3 @@ class ProductFactory
 }
 
 
-https://www.perplexity.ai/search/es-posible-crear-multitenan-en-uaCNCM7cR32B5KoN_I8WmQ

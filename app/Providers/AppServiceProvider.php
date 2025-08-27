@@ -1,17 +1,17 @@
 <?php
 
 namespace App\Providers;
-use App\Domain\IRepository\ICategoryRepository;
-use App\Infrastructure\Persistence\CategoryRepository;
-use App\Domain\IRepository\ICategoryAttributeRepository;
-use App\Infrastructure\Persistence\CategoryAttributeRepository;
-use App\Application\Contracts\ProductServiceInterface;
-use App\Application\Services\ProductApplicationService;
-use App\Domain\IRepository\IProductRepository;
-use App\Infrastructure\Persistence\Repository\ProductRepository;
+use Domain\IRepository\ICategoryRepository;
+use Infrastructure\Persistence\CategoryRepository;
+use Domain\IRepository\ICategoryAttributeRepository;
+use Infrastructure\Persistence\CategoryAttributeRepository;
+use Application\Contracts\ProductServiceInterface;
+use Application\Services\ProductApplicationService;
+use Domain\IRepository\IProductRepository;
+use Infrastructure\Persistence\Repository\ProductRepository;
 
-use App\Domain\IService\IProductValidationService;
-use App\Application\Services\ProductValidationService;
+use Domain\IService\IProductValidationService;
+use Application\Services\ProductValidationService;
 
 
 use Illuminate\Support\ServiceProvider;

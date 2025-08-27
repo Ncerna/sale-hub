@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Infrastructure\Framework\Controller\ProductController;
+use Infrastructure\Framework\Controller\ProductController;
 
-use App\Infrastructure\Framework\Controller\CategoryController;
+use Infrastructure\Framework\Controller\CategoryController;
 
 Route::get('/hello', function () {
     return response()->json(['message' => 'api-Hello World!']);
