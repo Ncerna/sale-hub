@@ -131,4 +131,23 @@ class User {
         $this->path_qr = $path_qr;
         return $this;
     }
+    public function validatePassword(string $plainPassword): bool
+    {
+        return password_verify($plainPassword, $this->password);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 1;
+    }
+
+    public static function fromPrimitives(array $data): User
+    {
+        $user = new self();
+        $user->id = $data['id'];
+        $user->username = new Username($data['username']);
+        $user->passwordHash = $data['passwordHash'];
+        $user->status = $data['status'];
+        return $user;
+    }
 }

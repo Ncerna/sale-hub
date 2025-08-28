@@ -29,6 +29,25 @@ class UserAdapter
     $data = $model->toArray();
     return User::fromArray($data);
 }
+public static function toDomain(EloquentUser $model): User
+    {
+        return new User(
+            $model->id,
+            new Username($model->username),
+            $model->password,
+            $model->status
+        );
+    }
+    public static function toDomain(EloquentUser $model): User
+{
+    return User::fromPrimitives([
+        'id' => $model->id,
+        'username' => $model->username,
+        'passwordHash' => $model->password,
+        'status' => $model->status,
+    ]);
+}
+
 /*
  public static function toEloquent(User $user): EloquentUser
     {

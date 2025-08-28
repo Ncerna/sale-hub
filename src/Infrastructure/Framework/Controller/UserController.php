@@ -35,4 +35,8 @@ class UserController {
     public function list() {
         return $this->service->listUsers();
     }
+    public function login(Request $request): JsonResponse
+    {
+        $user = $this->userService->login($username, $data['password']);
+    }
 }

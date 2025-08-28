@@ -3,6 +3,8 @@ namespace Application\Services;
 use Application\DTO\UserDTO;
 use Application\Contracts\UserServiceInterface;
 use Application\UseCase\User\CreateUserUseCase;
+use Application\UseCase\User\LoginUserUseCase;
+
 /*use Application\UseCase\UpdateUserUseCase;
 use Application\UseCase\DeleteUserUseCase;
 use Application\UseCase\GetUserUseCase;
@@ -11,6 +13,7 @@ use Domain\Entity\User;
 
 class UserApplicationService implements UserServiceInterface {
     private CreateUserUseCase $create;
+    private LoginUserUseCase $loginUserUseCase;
     /*private UpdateUserUseCase $update;
     private DeleteUserUseCase $delete;
     private GetUserUseCase $get;
@@ -18,6 +21,7 @@ class UserApplicationService implements UserServiceInterface {
 
     public function __construct(
         CreateUserUseCase $create,
+        LoginUserUseCase $loginUserUseCase
        /* UpdateUserUseCase $update,
         DeleteUserUseCase $delete,
         GetUserUseCase $get,
@@ -52,5 +56,9 @@ class UserApplicationService implements UserServiceInterface {
     public function listUsers(): array {
        // return $this->list->execute();
        return [];
+    }
+    public function login(String $username, string $password): User
+    {
+        return $this->loginUserUseCase->execute($username, $password);
     }
 }

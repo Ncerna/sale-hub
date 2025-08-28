@@ -9,4 +9,5 @@ interface UserServiceInterface {
     public function deleteUser(string $id): void;
     public function getUser(string $id): ?User;
     public function listUsers(): array;
+    public function login(String $username, string $password): User;
 }

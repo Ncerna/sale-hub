@@ -39,13 +39,28 @@ class UserRepository implements IUserRepository
     {
         return EloquentUser::where('email', $email)->exists();
     }
- public function findByUsername(string $username): ?User
-{
+    public function findByUsername(Username|string $username): ?User
+    {
+        // Si $username es un objeto de tipo Username, obtenemos el valor de la propiedad 'username'
+        if ($username instanceof Username) {
+            $username = $username->getValue();  // Asumiendo que tienes un método getValue() en la clase Username
+        }
     $model = EloquentUser::where('username', $username)
         ->where('status', 1)
         ->first();
 
     return $model ? UserAdapter::toEntity($model) : null;
 }
+
+public function findByUsername_1(Username $username): ?User
+    {
+        $record = EloquentUser::where('username', (string)$username)->first();
+
+        if (!$record) {
+            return null;
+        }
+
+        return UserAdapter::toDomain($record);
+    }
 
 }
