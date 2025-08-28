@@ -17,7 +17,7 @@ class UserAdapter
             'email' => $user->getEmail(),
             'phone_number' => $user->getPhoneNumber(),
             'address' => $user->getAddress(),
-            'role' => $user->getRole(),
+            'role_id' => $user->getRole() ? $user->getRole()->getId() : null,
             'status' => $user->getStatus(),
             'path_photo' => $user->getPathPhoto(),
             'path_qr' => $user->getPathQr()
