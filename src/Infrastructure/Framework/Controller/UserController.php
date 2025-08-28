@@ -12,6 +12,7 @@ class UserController {
     }
 
     public function store(Request $request) {
+        $hello="kkkk";
       $user = $this->service->registerUser($request->all());
     return response()->json([
         'status' => true,

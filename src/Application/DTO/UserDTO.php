@@ -16,14 +16,19 @@ class UserDTO
     public string $path_photo;
     public string $path_qr;
     public static function fromArray(array $data): User
-    {
-        $instance = new User();
-        foreach ($data as $key => $value) {
-            if (property_exists($instance, $key)) {
-                $instance->$key = $value;
-            }
+{
+    $user = new User();
+
+    foreach ($data as $key => $value) {
+        $method = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
+
+        if (method_exists($user, $method)) {
+            $user->$method($value);
         }
-        return $instance;
     }
+
+    return $user;
+}
+
 }
 
