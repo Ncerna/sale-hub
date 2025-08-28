@@ -1,6 +1,7 @@
 <?php
 namespace Application\DTO;
 use Domain\Entity\User;
+use Domain\Entity\Role;
 class UserDTO
 {
     public ?int $id = null;
@@ -15,20 +16,31 @@ class UserDTO
     public int $status;
     public string $path_photo;
     public string $path_qr;
-    public static function fromArray(array $data): User
+
+   public static function fromArray(array $data): User
 {
     $user = new User();
 
     foreach ($data as $key => $value) {
-        $method = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
+        $method = 'set' . str_replace('_', '', ucwords($key, '_'));
 
-        if (method_exists($user, $method)) {
+        if ($key === 'role_id') {
+            $role = new Role();
+            $role->setId($value);
+            $user->setRole($role);
+        } elseif (method_exists($user, $method)) {
             $user->$method($value);
         }
     }
 
     return $user;
 }
+
+    public function toArray(): array
+    {
+        return get_object_vars($this);
+    }
+    
 
 }
 

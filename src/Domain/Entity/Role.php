@@ -6,22 +6,27 @@ class Role {
     private string $name;
 
     public static function fromArray(array $data): self
-    {
-        $instance = new self();
-        foreach ($data as $key => $value) {
-            if (property_exists($instance, $key)) {
-                $instance->$key = $value;
-            }
+{
+    $instance = new self();
+    foreach ($data as $key => $value) {
+        $method = 'set' . str_replace('_', '', ucwords($key, '_'));
+        if (method_exists($instance, $method)) {
+            $instance->$method($value);
         }
-        return $instance;
     }
+    return $instance;
+}
+
     public function toArray(): array
     {
         return get_object_vars($this);
     }
-    public function getId(): int {
-        return $this->id;
+   public function getId(): int {
+    if ($this->id === null) {
+        throw new \LogicException('Role ID has not been set');
     }
+    return $this->id;
+}
 
     public function getName(): string {
         return $this->name;
