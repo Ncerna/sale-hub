@@ -32,6 +32,6 @@ class ProductCoordinatorService
 
     public function listProducts($page, $size, $search)
     {
-        return $this->productService->listProducts($page, $size, $search);
+       // return $this->productService->listProducts($page, $size, $search);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use Infrastructure\Framework\Controller\UserController;
 use Infrastructure\Framework\Controller\ProductController;
 
 use Infrastructure\Framework\Controller\CategoryController;
@@ -9,6 +9,17 @@ use Infrastructure\Framework\Controller\CategoryController;
 Route::get('/hello', function () {
     return response()->json(['message' => 'api-Hello World!']);
 });
+
+
+
+Route::prefix('users')->group(function () {
+    Route::post('/', [UserController::class, 'store']);    
+    Route::get('/', [UserController::class, 'list']);      
+    Route::get('/{id}', [UserController::class, 'show']);   
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::delete('/{id}', [UserController::class, 'destroy']); 
+});
+
 
 Route::prefix('products')->group(function() {
     Route::get('/', [ProductController::class, 'list']);

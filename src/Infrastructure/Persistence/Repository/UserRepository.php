@@ -1,29 +1,23 @@
 <?php
 namespace Infrastructure\Persistence\Repository;
-
 use Domain\Entity\User;
 use Domain\IRepository\IUserRepository;
-
+use Infrastructure\Persistence\Eloquent\EloquentUser;
 use Infrastructure\Framework\Adapters\UserAdapter;
-
 class UserRepository implements IUserRepository
 {
     public function save(User $user): User
     {
         $model = UserAdapter::toEloquent($user);
         $model->save();
-
-        // Opcional: asignar ID generado
         if (!$user->getId()) {
             $reflection = new \ReflectionClass($user);
             $property = $reflection->getProperty('id');
             $property->setAccessible(true);
             $property->setValue($user, $model->id);
         }
-
         return $user;
     }
-
     public function update(User $user): User {
         // Busca, actualiza
         return $user;
@@ -41,4 +35,17 @@ class UserRepository implements IUserRepository
         
         return [];
     }
+      public function existsByEmail(string $email): bool
+    {
+        return EloquentUser::where('email', $email)->exists();
+    }
+ public function findByUsername(string $username): ?User
+{
+    $model = EloquentUser::where('username', $username)
+        ->where('status', 1)
+        ->first();
+
+    return $model ? UserAdapter::toEntity($model) : null;
+}
+
 }

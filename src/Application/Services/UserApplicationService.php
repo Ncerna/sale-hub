@@ -1,6 +1,6 @@
 <?php
 namespace Application\Services;
-
+use Application\DTO\UserDTO;
 use Application\Contracts\UserServiceInterface;
 use Application\UseCase\User\CreateUserUseCase;
 /*use Application\UseCase\UpdateUserUseCase;
@@ -31,24 +31,26 @@ class UserApplicationService implements UserServiceInterface {
     }
 
     public function registerUser(array $data): User {
-        $user = new User(...); // mapear datos
+         $user = UserDTO::fromArray($data);
         return $this->create->execute($user);
     }
 
     public function updateUser(array $data): User {
-        $user = new User(...);
-        return $this->update->execute($user);
+        $user = UserDTO::fromArray($data);
+        //return $this->update->execute($user);
+        return $user ;
     }
 
     public function deleteUser(string $id): void {
-        $this->delete->execute($id);
+       // $this->delete->execute($id);
     }
 
     public function getUser(string $id): ?User {
-        return $this->get->execute($id);
+       // return $this->get->execute($id);
     }
 
     public function listUsers(): array {
-        return $this->list->execute();
+       // return $this->list->execute();
+       return [];
     }
 }

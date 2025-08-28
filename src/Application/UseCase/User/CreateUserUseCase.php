@@ -3,7 +3,7 @@ namespace Application\UseCase\User;
 
 use Domain\Entity\User;
 use Domain\IRepository\IUserRepository;
-
+use Exception;
 class CreateUserUseCase {
     private IUserRepository $userRepo;
 
@@ -12,7 +12,9 @@ class CreateUserUseCase {
     }
 
     public function execute(User $user): User {
-        // Aquí puedes llamar a un validador si lo deseas
+         if ($this->userRepo->existsByEmail($user->getEmail())) {
+            throw new Exception("Email already in use");
+        }
         return $this->userRepo->save($user);
     }
 }

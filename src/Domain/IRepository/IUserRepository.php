@@ -9,4 +9,5 @@ interface IUserRepository {
     public function delete(string $id): void;
     public function findById(string $id): ?User;
     public function findAll(): array;
+     public function existsByEmail(string $email): bool; 
 }

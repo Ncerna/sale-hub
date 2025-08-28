@@ -3,11 +3,11 @@ namespace Domain\Entity;
 use Domain\Entity\Role;
 
 class User {
-    private string $id;
+    private ?int $id =null;
     private string $first_name;
     private string $last_name;
     private string $username;
-    private string $password;
+    private ?string $password =null;
     private string $email;
     private string $phone_number;
     private string $address;
@@ -16,12 +16,30 @@ class User {
     private string $path_photo;
     private string $path_qr;
 
+    public function toArray(): array {
+        return get_object_vars($this);
+    }
+
+    public static function fromArray(array $data): self {
+        $instance = new self();
+        foreach ($data as $key => $value) {
+            if (property_exists($instance, $key)) {
+
+               if ($key === 'role_id' && is_array($value)) {
+                $instance->$key = Role::fromArray($value); 
+            }
+                $instance->$key = $value;
+            }
+        }
+        return $instance;
+    }
+
     // Getters and Setters
 
-    public function getId(): string {
+    public function getId(): ?int {
         return $this->id;
     }
-    public function setId(string $id): self {
+    public function setId(?int $id): self {
         $this->id = $id;
         return $this;
     }
