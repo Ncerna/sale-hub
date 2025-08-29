@@ -3,7 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Src\Infrastructure\Framework\Middleware\VerifySignature;
+use Infrastructure\Framework\Middleware\VerifySignature;
+use Infrastructure\Framework\Middleware\IdentifyTenant;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Registrar middleware personalizado con alias opcional
         $middleware->alias([
             'signature' => VerifySignature::class,
+            'x-tenant' => IdentifyTenant::class,
         ]);
 
         // Agregar middleware global si lo deseas

@@ -10,6 +10,10 @@ Route::get('/hello', function () {
     return response()->json(['message' => 'api-Hello World!']);
 });
 
+Route::middleware(['x-tenant'])->group(function () {
+    Route::get('/ping', fn() => response()->json(['message' => 'Hola']));
+    // otras rutas...
+});
 
 
 Route::prefix('users')->group(function () {
