@@ -1,6 +1,6 @@
 <?php
 namespace Application\UseCase;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Domain\IRepository\IUserRepository;
 use Domain\Entity\User;
 use Domain\ValueObject\Username;
@@ -14,7 +14,7 @@ class LoginUserUseCase
         $this->userRepository = $userRepository;
     }
 
-    public function execute(Username $username, string $password): User
+    public function execute(Username $username, string $password): User|array
     {
         $user = $this->userRepository->findByUsername($username);
 
@@ -29,7 +29,13 @@ class LoginUserUseCase
         if (!$user->validatePassword($password)) {
             throw new \InvalidArgumentException("Contraseña incorrecta");
         }
+        $token = JWTAuth::fromUser($user); // Para esto user debe ser compatible
 
-        return $user;
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
+
+        //return $user;
     }
 }

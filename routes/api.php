@@ -20,6 +20,13 @@ Route::prefix('users')->group(function () {
     Route::delete('/{id}', [UserController::class, 'destroy']); 
 });
 
+// Rutas protegidas con JWT, solo accesibles si el token es válido
+Route::middleware(['auth:api', 'signature'])->group(function () {
+    Route::get('/products', [ProductController::class, 'list']);
+    Route::post('/products', [ProductController::class, 'store']);
+    // etc.
+});
+
 
 Route::prefix('products')->group(function() {
     Route::get('/', [ProductController::class, 'list']);

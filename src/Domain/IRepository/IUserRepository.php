@@ -11,5 +11,5 @@ interface IUserRepository {
     public function findById(string $id): ?User;
     public function findAll(): array;
      public function existsByEmail(string $email): bool; 
-     public function findByUsername(Username $username): ?User;
+     public function findByUsername(Username|string $username): ?User;
 }

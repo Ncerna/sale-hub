@@ -38,7 +38,7 @@ public static function toDomain(EloquentUser $model): User
             $model->status
         );
     }
-    public static function toDomain(EloquentUser $model): User
+    public static function toDomain_(EloquentUser $model): User
 {
     return User::fromPrimitives([
         'id' => $model->id,
@@ -48,6 +48,18 @@ public static function toDomain(EloquentUser $model): User
     ]);
 }
 
+public static function loginSuccess($user, string $token): array
+    {
+        return [
+            'status' => true,
+            'message' => 'Login exitoso',
+            'user' => [
+                'id' => $user->getId(),
+                'username' => (string) $user->getUsername(),
+            ],
+            'token' => $token,
+        ];
+    }
 /*
  public static function toEloquent(User $user): EloquentUser
     {

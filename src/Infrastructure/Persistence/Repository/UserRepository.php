@@ -2,6 +2,7 @@
 namespace Infrastructure\Persistence\Repository;
 use Domain\Entity\User;
 use Domain\IRepository\IUserRepository;
+use Domain\ValueObject\Username;
 use Infrastructure\Persistence\Eloquent\EloquentUser;
 use Infrastructure\Framework\Adapters\UserAdapter;
 class UserRepository implements IUserRepository
@@ -43,7 +44,7 @@ class UserRepository implements IUserRepository
     {
         // Si $username es un objeto de tipo Username, obtenemos el valor de la propiedad 'username'
         if ($username instanceof Username) {
-            $username = $username->getValue();  // Asumiendo que tienes un método getValue() en la clase Username
+            $username = $username->__toString();  // Asumiendo que tienes un método getValue() en la clase Username
         }
     $model = EloquentUser::where('username', $username)
         ->where('status', 1)
