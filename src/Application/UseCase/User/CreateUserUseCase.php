@@ -15,6 +15,7 @@ class CreateUserUseCase {
          if ($this->userRepo->existsByEmail($user->getEmail())) {
             throw new Exception("Email already in use");
         }
+       
         return $this->userRepo->save($user);
     }
 }

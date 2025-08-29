@@ -9,6 +9,7 @@ class UserRepository implements IUserRepository
 {
     public function save(User $user): User
     {
+        
         $model = UserAdapter::toEloquent($user);
         $model->save();
         if (!$user->getId()) {
