@@ -1,8 +1,8 @@
 <?php
 namespace Infrastructure\Framework\Controller;
-
 use Illuminate\Http\Request;
 use Application\Contracts\UserServiceInterface;
+use Infrastructure\Framework\Adapters\ApiResponse;
 
 class UserController {
     private UserServiceInterface $service;
@@ -12,16 +12,13 @@ class UserController {
     }
 
     public function store(Request $request) {
-        $hello="kkkk";
       $user = $this->service->registerUser($request->all());
-    return response()->json([
-        'status' => true,
-        'user' => $user
-    ]);
+     return ApiResponse::success($user->toArray(), 'User registered successfully');
     }
 
     public function update(Request $request) {
-        return $this->service->updateUser($request->all());
+        $user = $this->service->updateUser($request->all());
+      return ApiResponse::success($user->toArray(), 'User update successfully');
     }
 
     public function delete(string $id) {
@@ -35,10 +32,5 @@ class UserController {
     public function list() {
         return $this->service->listUsers();
     }
-    public function login(Request $request)
-    {
-        $data= $request->all();
-        return $this->service->login($data['username'], $data['password']);
-       // return response()->json(ResponseFormatter::loginSuccess($result['user'], $result['token']));
-    }
+
 }

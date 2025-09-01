@@ -1,13 +1,12 @@
 <?php
 namespace Infrastructure\Persistence\Repository;
-
-use Spatie\Multitenancy\Models\Tenant;
-
+use App\Models\Tenant;
 class TenantRepository
 {
     protected array $tenants = [
-        ['id' => 1, 'name' => 'Cliente Uno', 'domain' => 'cliente1', 'database' => 'cliente1_db'],
-        ['id' => 2, 'name' => 'Cliente Dos', 'domain' => 'cliente2', 'database' => 'cliente2_db'],
+        ['id' => 1, 'name' => 'Cliente Uno', 'domain' => 'cliente1_db', 'database' => 'salehub'],
+        ['id' => 2, 'name' => 'Cliente Dos', 'domain' => 'cliente2_db', 'database' => 'salehub_db'],
+        ['id' => 3, 'name' => 'Cliente Tree', 'domain' => 'cliente3_db', 'database' => 'salehub_01'],
     ];
 
     public function all(): array
@@ -24,7 +23,6 @@ class TenantRepository
         }
         return null;
     }
-
     private function toTenant(array $data): Tenant
     {
         $tenant = new Tenant();

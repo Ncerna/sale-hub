@@ -2,7 +2,7 @@
 
 namespace Application\UseCase;
 
-use Application\DTO\CategoryDTO;
+use Application\DTOs\CategoryDTO;
 use Domain\Entity\Category;
 use Domain\Entity\CategoryAttribute;
 use Domain\IRepository\ICategoryRepository;
@@ -21,10 +21,10 @@ class CreateCategoryUseCase
         $this->attributeRepository = $attributeRepository;
     }
 
-    public function execute(CategoryDTO $dto): Category
+    public function execute(CategoryDTO $DTOs): Category
     {
         $attributes = [];
-        foreach ($dto->attributes as $attrDTO) {
+        foreach ($DTOs->attributes as $attrDTO) {
             $attributes[] = new CategoryAttribute(
                 null,
                 0, // category_id se asigna luego
@@ -36,11 +36,11 @@ class CreateCategoryUseCase
         }
         $category = new Category(
             null,
-            $dto->familyId,
-            $dto->name,
-            $dto->photo,
-            $dto->description,
-            $dto->status,
+            $DTOs->familyId,
+            $DTOs->name,
+            $DTOs->photo,
+            $DTOs->description,
+            $DTOs->status,
             $attributes
         );
 

@@ -9,7 +9,7 @@ class EloquentRole extends Model
     protected $table = 'roles';
 
     protected $fillable = [
-        'role_name'
+       'id', 'role_name'
     ];
 
     public function users(): HasMany

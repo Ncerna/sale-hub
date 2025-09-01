@@ -2,15 +2,24 @@
 namespace Infrastructure\Persistence\Repository;
 use Domain\Entity\User;
 use Domain\IRepository\IUserRepository;
-use Domain\ValueObject\Username;
 use Infrastructure\Persistence\Eloquent\EloquentUser;
 use Infrastructure\Framework\Adapters\UserAdapter;
 class UserRepository implements IUserRepository
 {
+    protected $model;
+
+    public function __construct(EloquentUser $model)
+    {
+        $this->model = $model;
+    }
     public function save(User $user): User
     {
-        
-        $model = UserAdapter::toEloquent($user);
+        if ($user->getId()) {
+            $model = EloquentUser::find($user->getId());
+            $model = UserAdapter::toEloquent($user, $model);
+        } else {
+            $model = UserAdapter::toEloquent($user);
+        }
         $model->save();
         if (!$user->getId()) {
             $reflection = new \ReflectionClass($user);
@@ -20,49 +29,42 @@ class UserRepository implements IUserRepository
         }
         return $user;
     }
-    public function update(User $user): User {
-        // Busca, actualiza
-        return $user;
-    }
 
-    public function delete(string $id): void {
+ 
+
+    public function delete(string $id): void
+    {
         // Delete
     }
 
-    public function findById(string $id): ?User {
-        // Find
+    public function findById(string $id): ?User
+    {
+        $model = EloquentUser::find($id);
+        return $model ? UserAdapter::toDomain($model) : null;
     }
 
-    public function findAll(): array {
-        
+
+    public function findAll(): array
+    {
+
         return [];
     }
-      public function existsByEmail(string $email): bool
+    public function findByEmail(string $email): ?User
     {
-        return EloquentUser::where('email', $email)->exists();
+        $model = EloquentUser::where('email', (string) $email)
+            ->where('status', 1)
+            ->first();
+        return $model ? UserAdapter::toDomain($model) : null;
     }
-    public function findByUsername(Username|string $username): ?User
+
+    public function findByUsername(string $username): ?User
     {
-        // Si $username es un objeto de tipo Username, obtenemos el valor de la propiedad 'username'
-        if ($username instanceof Username) {
-            $username = $username->__toString();  // Asumiendo que tienes un método getValue() en la clase Username
-        }
-    $model = EloquentUser::where('username', $username)
-        ->where('status', 1)
-        ->first();
-
-    return $model ? UserAdapter::toEntity($model) : null;
-}
-
-public function findByUsername_1(Username $username): ?User
-    {
-        $record = EloquentUser::where('username', (string)$username)->first();
-
-        if (!$record) {
-            return null;
-        }
-
-        return UserAdapter::toDomain($record);
+        $model = EloquentUser::where('username', (string) $username)
+            ->where('status', 1)
+            ->first();
+        return $model ? UserAdapter::toDomain($model) : null;
     }
+
+
 
 }

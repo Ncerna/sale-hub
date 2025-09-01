@@ -26,7 +26,7 @@ class ProductController
     public function store(Request $request)
     {
         $data = $request->all();
-         Log::info('Entrando al controlador store() con datos:', $request->all());
+        
         $product = $this->productService->registerProduct($data);
         return response()->json(['product' => $product],201);
       

@@ -1,8 +1,8 @@
 <?php
 namespace Infrastructure\Framework\Controller;
 
-use Application\DTO\CategoryDTO;
-use Application\DTO\CategoryAttributeDTO;
+use Application\DTOs\CategoryDTO;
+use Application\DTOs\CategoryAttributeDTO;
 use Application\UseCase\CreateCategoryUseCase;
 use Illuminate\Http\Request;
 
@@ -29,7 +29,7 @@ class CategoryController
             );
         }
 
-        $dto = new CategoryDTO(
+        $DTOs = new CategoryDTO(
             null,
             (int)$request->input('family_id'),
             $request->input('name'),
@@ -40,7 +40,7 @@ class CategoryController
         );
 
         try {
-            $category = $this->createCategoryUseCase->execute($dto);
+            $category = $this->createCategoryUseCase->execute($DTOs);
             return response()->json(['status' => 'success', 'data' => $category]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);

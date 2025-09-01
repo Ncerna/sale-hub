@@ -131,7 +131,7 @@ return [
             'port' => env('TENANT_DB_PORT', '3306'),
             'database' => null, // Muy importante que esté en null aquí
             'username' => env('TENANT_DB_USERNAME', 'root'),
-            'password' => env('TENANT_DB_PASSWORD', ''),
+            'password' => env('TENANT_DB_PASSWORD', 'oracle'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',

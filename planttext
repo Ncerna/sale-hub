@@ -76,7 +76,7 @@ Clase: RegisterSaleUseCase (lógica para registrar una venta, usa repositorios y
 Service/
 Clase: SaleApplicationService (servicios que exponen operaciones de ventas para UI o API)
 
-DTO/
+DTOs/
 Clase: SaleDTO (estructura de datos para transferencia fácil entre capas y sobre la red)
 
 Command/
@@ -262,7 +262,7 @@ class SaleApplicationService {
 }
 
 // ==========================
-// 2. Application/DTO/SaleDTO.php
+// 2. Application/DTOs/SaleDTO.php
 // ==========================
 class SaleDTO {
     public float $amount;
@@ -359,8 +359,8 @@ class SaleController {
     }
 
     public function createSale(array $requestData): void {
-        $dto = new SaleDTO($requestData);
-        $command = new CreateSaleCommand($dto);
+        $DTOs = new SaleDTO($requestData);
+        $command = new CreateSaleCommand($DTOs);
         $this->saleService->registerSale($command->saleDTO->amount, $command->saleDTO->date);
         echo "Sale created successfully.\n";
     }
@@ -601,9 +601,9 @@ class SaleApplicationService {
 }
 
 // ================================
-// 2. Application/DTO/SaleDTO.php
+// 2. Application/DTOs/SaleDTO.php
 // ================================
-namespace Application\DTO;
+namespace Application\DTOs;
 
 class SaleDTO {
     public float $amount;
@@ -620,7 +620,7 @@ class SaleDTO {
 // ================================
 namespace Application\Command;
 
-use Application\DTO\SaleDTO;
+use Application\DTOs\SaleDTO;
 
 class CreateSaleCommand {
     public SaleDTO $saleDTO;

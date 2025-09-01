@@ -1,21 +1,28 @@
 <?php
 namespace Application\UseCase\User;
-
+use Domain\IService\IUserValidationService;
+use Application\DTOs\UserRequest;
 use Domain\Entity\User;
+use Domain\ValueObject\Password;
 use Domain\IRepository\IUserRepository;
-use Exception;
-class CreateUserUseCase {
+class CreateUserUseCase
+{
     private IUserRepository $userRepo;
-
-    public function __construct(IUserRepository $repo) {
-        $this->userRepo = $repo;
+    private IUserValidationService $validation;
+    public function __construct(IUserRepository $userRepo, IUserValidationService $validationService)
+    {
+        $this->userRepo = $userRepo;
+        $this->validation = $validationService;
     }
 
-    public function execute(User $user): User {
-         if ($this->userRepo->existsByEmail($user->getEmail())) {
-            throw new Exception("Email already in use");
-        }
-       
+    public function execute(UserRequest $UserRequest): User
+    {
+        $user = User::fromArray($UserRequest->toArray());
+        $this->validation->validate($user);
+        $password_hash = Password::fromPlainText($user->getPassword());
+        $user->setPassword($password_hash->getHash());
+
         return $this->userRepo->save($user);
     }
+
 }

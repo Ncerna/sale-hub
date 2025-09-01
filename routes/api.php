@@ -3,18 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Infrastructure\Framework\Controller\UserController;
 use Infrastructure\Framework\Controller\ProductController;
-
 use Infrastructure\Framework\Controller\CategoryController;
-
+use Infrastructure\Framework\Controller\AuthController;
 Route::get('/hello', function () {
     return response()->json(['message' => 'api-Hello World!']);
 });
 
-Route::middleware(['x-tenant'])->group(function () {
-    Route::get('/ping', fn() => response()->json(['message' => 'Hola']));
-    // otras rutas...
-});
-
+Route::post('login', [AuthController::class, 'login']);
+Route::post('auth/refresh-token', [AuthController::class, 'refresh']);
 
 Route::prefix('users')->group(function () {
     Route::post('/', [UserController::class, 'store']);    
@@ -22,13 +18,6 @@ Route::prefix('users')->group(function () {
     Route::get('/{id}', [UserController::class, 'show']);   
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']); 
-});
-
-// Rutas protegidas con JWT, solo accesibles si el token es válido
-Route::middleware(['auth:api', 'signature'])->group(function () {
-    Route::get('/products', [ProductController::class, 'list']);
-    Route::post('/products', [ProductController::class, 'store']);
-    // etc.
 });
 
 

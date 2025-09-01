@@ -155,11 +155,11 @@ interface ProductService {
 ├── Application/                       
 │   │   ├── UseCase/                      
 │   │   ├── Service/                       
-│   │   ├── DTO/                        
+│   │   ├── DTOs/                        
 │   │   └── Command/
 
-// src/Application/Product/DTO/ProductDTO.php
-namespace Application\Product\DTO;
+// src/Application/Product/DTOs/ProductDTO.php
+namespace Application\Product\DTOs;
 
 class ProductDTO {
     public string $name;
@@ -180,7 +180,7 @@ class ProductDTO {
 // src/Application/Product/UseCase/CreateProductUseCase.php
 namespace Application\Product\UseCase;
 
-use Application\Product\DTO\ProductDTO;
+use Application\Product\DTOs\ProductDTO;
 use Domain\IService\ProductService;
 
 class CreateProductUseCase {
@@ -236,7 +236,7 @@ class ProductApplicationService implements ProductService {
 // src/Application/Product/Command/CreateProductCommand.php
 namespace Application\Product\Command;
 
-use Application\Product\DTO\ProductDTO;
+use Application\Product\DTOs\ProductDTO;
 
 class CreateProductCommand {
     private ProductDTO $productDTO;
@@ -370,7 +370,7 @@ class CustomDatabaseConnection
 namespace Infrastructure\Framework\Controller;
 
 use Application\Product\UseCase\CreateProductUseCase;
-use Application\Product\DTO\ProductDTO;
+use Application\Product\DTOs\ProductDTO;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -384,7 +384,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $dto = new ProductDTO(
+        $DTOs = new ProductDTO(
             $request->input('name'),
             $request->input('basePrice'),
             $request->input('igvRate'),
@@ -392,7 +392,7 @@ class ProductController extends Controller
             $request->input('stock')
         );
 
-        $product = $this->createProductUseCase->execute($dto);
+        $product = $this->createProductUseCase->execute($DTOs);
 
         return response()->json(['product' => $product->getName()], 201);
     }
@@ -421,7 +421,7 @@ class CheckProductStock
 namespace Infrastructure\Framework\Adapters;
 
 use Illuminate\Http\Request;
-use Application\Product\DTO\ProductDTO;
+use Application\Product\DTOs\ProductDTO;
 
 class ProductRequestAdapter
 {

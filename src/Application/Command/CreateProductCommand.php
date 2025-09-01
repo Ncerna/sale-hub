@@ -1,7 +1,7 @@
 <?php
 namespace Application\Command;
 
-use Application\DTO\ProductDTO;
+use Application\DTOs\ProductDTO;
 
 class CreateProductCommand
 {

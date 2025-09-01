@@ -2,16 +2,11 @@
 
 
 namespace App\Models;
-
+use Spatie\Multitenancy\Contracts\IsTenant;
 use Spatie\Multitenancy\Models\Tenant as BaseTenant;
 
-class Tenant extends BaseTenant
+class Tenant extends BaseTenant implements IsTenant
 {
-    // Puedes añadir nuevas propiedades o métodos propios aquí,
-    // o redefinir métodos si es necesario para tu lógica de negocio.
-    public function getTenantKey(): mixed
-    {
-        return $this->id; // Aquí estás devolviendo el id que se espera
-    }
+    protected $fillable = ['id', 'name', 'domain', 'database'];
 }
 

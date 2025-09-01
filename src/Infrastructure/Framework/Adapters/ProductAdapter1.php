@@ -2,7 +2,7 @@
 namespace Infrastructure\Framework\Adapters;
 
 use Domain\Entity\Product;
-use Application\DTO\ProductDTO;
+use Application\DTOs\ProductDTO;
 
 class ProductAdapter1
 {
@@ -17,9 +17,9 @@ class ProductAdapter1
         );
     }
 
-    public static function toDomainEntity(ProductDTO $dto): Product
+    public static function toDomainEntity(ProductDTO $DTOs): Product
     {
         // Si necesitas convertir en sentido inverso
-        // construir entidad Product usando DTO y value objects
+        // construir entidad Product usando DTOs y value objects
     }*/
 }

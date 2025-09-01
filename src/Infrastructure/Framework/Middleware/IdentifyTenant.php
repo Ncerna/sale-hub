@@ -1,10 +1,12 @@
 <?php
+
 namespace Infrastructure\Framework\Middleware;
 use Illuminate\Support\Facades\Log;
 use Closure;
 use Illuminate\Http\Request;
 use Infrastructure\ServiceImplementations\ApiHeaderTenantFinder;
 use Spatie\Multitenancy\Models\Tenant;
+use Exception;
 
 class IdentifyTenant
 {
@@ -20,20 +22,14 @@ class IdentifyTenant
         $tenant = $this->tenantFinder->findForRequest($request);
 
         if (!$tenant) {
-          
-
-            return response()->json(['message' => 'Tenant no encontrado'], 401);
+            throw new Exception('Tenant no encontrado', 401);
         }
+         if (!($tenant instanceof Tenant)) {
+         throw new Exception('El tenant no es del tipo esperado');
+         }
 
-        $currentTenant = Tenant::current();
-
-        if ($currentTenant === null || !$tenant->isCurrent()) {
-            Log::info('Cambio de tenant activo detectado.', [
-                'tenant_anterior' => $currentTenant->getKey(),
-                'tenant_nuevo' => $tenant->getDatabaseName(),
-            ]);
-            $tenant->makeCurrent();
-        }
+        Tenant::forgetCurrent();
+        $tenant->makeCurrent();
 
         return $next($request);
     }

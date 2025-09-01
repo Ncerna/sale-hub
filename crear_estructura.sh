@@ -4,7 +4,7 @@
 # cd saleHub || { echo "Directorio saleHub no encontrado"; exit 1; }
 
 mkdir -p app/Domain/{Entity,IRepository,IService,ValueObject}
-mkdir -p app/Application/{UseCase,Service,DTO,Command}
+mkdir -p app/Application/{UseCase,Service,DTOs,Command}
 mkdir -p app/Infrastructure/{Persistence,ApiClients,ServiceImplementations,Framework/{Controller,Middleware,Adapters,Factories}}
 mkdir -p config
 mkdir -p routes

@@ -1,48 +1,48 @@
 <?php
 namespace Application\Services;
-use Application\DTO\UserDTO;
+use Application\DTOs\UserRequest;
 use Application\Contracts\UserServiceInterface;
 use Application\UseCase\User\CreateUserUseCase;
-use Application\UseCase\User\LoginUserUseCase;
+use Application\UseCase\User\AuthUserUseCase;
+use Application\UseCase\User\UpdateUserUseCase;
 
-/*use Application\UseCase\UpdateUserUseCase;
-use Application\UseCase\DeleteUserUseCase;
+/*use Application\UseCase\DeleteUserUseCase;
 use Application\UseCase\GetUserUseCase;
 use Application\UseCase\ListUsersUseCase;*/
 use Domain\Entity\User;
 
-class UserApplicationService implements UserServiceInterface {
+class UserService implements UserServiceInterface {
     private CreateUserUseCase $create;
-    private LoginUserUseCase $loginUserUseCase;
-    /*private UpdateUserUseCase $update;
-    private DeleteUserUseCase $delete;
+    private AuthUserUseCase $AuthUserUseCase;
+    private UpdateUserUseCase $update;
+    /*private DeleteUserUseCase $delete;
     private GetUserUseCase $get;
     private ListUsersUseCase $list;*/
 
     public function __construct(
         CreateUserUseCase $create,
-        LoginUserUseCase $loginUserUseCase
-       /* UpdateUserUseCase $update,
-        DeleteUserUseCase $delete,
+        
+        UpdateUserUseCase $update,
+       /* DeleteUserUseCase $delete,
         GetUserUseCase $get,
         ListUsersUseCase $list*/
     ) {
         $this->create = $create;
-        /*$this->update = $update;
-        $this->delete = $delete;
+        $this->update = $update;
+       /* $this->delete = $delete;
         $this->get = $get;
         $this->list = $list;*/
     }
 
     public function registerUser(array $data): User {
-         $user = UserDTO::fromArray($data);
-        return $this->create->execute($user);
+         $UserRequest = UserRequest::fromArray($data);
+        return $this->create->execute($UserRequest);
     }
 
     public function updateUser(array $data): User {
-        $user = UserDTO::fromArray($data);
-        //return $this->update->execute($user);
-        return $user ;
+        $user = UserRequest::fromArray($data);
+        return $this->update->execute($user);
+        
     }
 
     public function deleteUser(string $id): void {
@@ -57,8 +57,5 @@ class UserApplicationService implements UserServiceInterface {
        // return $this->list->execute();
        return [];
     }
-    public function login(String $username, string $password): User
-    {
-        return $this->loginUserUseCase->execute($username, $password);
-    }
+    
 }

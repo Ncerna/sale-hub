@@ -58,7 +58,7 @@ saleHub/
 │   ├── Application/                          # Capa de aplicación (coordinación de casos de uso)
 │   │   ├── UseCase/                          # Casos de uso de negocio
 │   │   ├── Service/                          # Servicios de aplicación (interactúan con dominio)
-│   │   ├── DTO/                              # Objetos de transferencia de datos
+│   │   ├── DTOs/                              # Objetos de transferencia de datos
 │   │   └── Command/                          # Comandos o solicitudes específicas (opcional)
 │
 │   └── Infrastructure/                       # Capa de infraestructura

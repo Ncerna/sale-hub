@@ -8,7 +8,7 @@ class ClearAllCaches extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan clear:all
+     * ||||| php artisan clear:all  |||||||
      * @var string
      */
     protected $signature = 'clear:all';

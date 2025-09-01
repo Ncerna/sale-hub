@@ -4,8 +4,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Domain\IRepository\IUserRepository;
 use Domain\Entity\User;
 use Domain\ValueObject\Username;
+use Carbon\Carbon;
 
-class LoginUserUseCase
+class AuthUserUseCase
 {
     private IUserRepository $userRepository;
 
@@ -29,8 +30,10 @@ class LoginUserUseCase
         if (!$user->validatePassword($password)) {
             throw new \InvalidArgumentException("Contraseña incorrecta");
         }
-        $token = JWTAuth::fromUser($user); // Para esto user debe ser compatible
-
+          // Expiración en 7 días, por ejemplo
+    $token = JWTAuth::factory()
+        ->setTTL(60 * 24 * 7) // minutos en 7 días
+        ->fromUser($user);
         return [
             'user' => $user,
             'token' => $token,
@@ -38,4 +41,5 @@ class LoginUserUseCase
 
         //return $user;
     }
+    
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Application\DTO;
+namespace Application\DTOs;
 
 class CategoryDTO
 {

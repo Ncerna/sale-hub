@@ -11,6 +11,7 @@ class User {
     private string $email;
     private string $phone_number;
     private string $address;
+    private int $role_id;
     private Role $role;
     private int $status;
     private string $path_photo;
@@ -28,6 +29,7 @@ class User {
                if ($key === 'role_id' && is_array($value)) {
                 $instance->$key = Role::fromArray($value); 
             }
+
                 $instance->$key = $value;
             }
         }
@@ -99,14 +101,22 @@ class User {
         $this->address = $address;
         return $this;
     }
-
     public function getRole(): Role {
         return $this->role;
     }
-    public function setRole(Role $role): self {
+        public function setRole(Role $role): self {
         $this->role = $role;
         return $this;
+        }
+
+
+   /* public function getRole(): ?int {
+        return $this->role_id;
     }
+    public function setRole(?int $role_id): self {
+        $this->role_id = $role_id;
+        return $this;
+    }*/
 
     public function getStatus(): int {
         return $this->status;
@@ -141,13 +151,5 @@ class User {
         return $this->status === 1;
     }
 
-    public static function fromPrimitives(array $data): User
-    {
-        $user = new self();
-        $user->id = $data['id'];
-        $user->username = new Username($data['username']);
-        $user->passwordHash = $data['passwordHash'];
-        $user->status = $data['status'];
-        return $user;
-    }
+   
 }

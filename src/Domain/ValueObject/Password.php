@@ -1,33 +1,66 @@
 <?php
 namespace Domain\ValueObject;
+
 use Exception;
+
 class Password
 {
-    private $password;
-    private $min = 6;
-    private $max = 20;
+    private string $hashedPassword;
+    private int $min = 6;
+    private int $max = 20;
 
-    public function __construct(string $password)
+    /**
+     * Constructor privado para evitar crear instancia sin hash
+     */
+    private function __construct(string $hashedPassword)
     {
-        $length = mb_strlen($password);
-        if ($length < $this->min || $length > $this->max) {
-            throw new Exception("Password length must be between {$this->min} and {$this->max} characters.");
+        $this->hashedPassword = $hashedPassword;
+    }
+
+    /**
+     * Crear el objeto Password desde texto plano (validando y hasheando)
+     */
+    public static function fromPlainText(string $plainPassword): self
+    {
+        $length = mb_strlen($plainPassword);
+        if ($length < 6 || $length > 20) {
+            throw new Exception("Password length must be between 6 and 20 characters.");
         }
-        $this->password = $password;
+
+        $hash = password_hash($plainPassword, PASSWORD_BCRYPT);
+
+        return new self($hash);
     }
 
-    public function getHashed(): string
+    /**
+     * Crear el objeto Password desde un hash (ejemplo al cargar de BD)
+     */
+    public static function fromHash(string $hash): self
     {
-        return password_hash($this->password, PASSWORD_BCRYPT);
+        return new self($hash);
     }
 
+    /**
+     * Verificar un texto plano contra el hash guardado
+     */
     public function verify(string $plainPassword): bool
     {
-        return password_verify($plainPassword, $this->getHashed());
+        return password_verify($plainPassword, $this->hashedPassword);
     }
 
-    public function __toString()
+    /**
+     * Obtener el hash (para almacenar)
+     */
+    public function getHash(): string
     {
-        return $this->password;
+        return $this->hashedPassword;
+    }
+
+    /**
+     * No devolver la contraseña en texto plano ni el hash
+     */
+    public function __toString(): string
+    {
+        return '********';
     }
 }

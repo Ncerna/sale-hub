@@ -10,10 +10,11 @@ class UserAdapter
     {
         $model = $eloquent ?? new EloquentUser();
         $model->fill([
+            'id' => $user->getId() ?? null,
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'password' => $user->getPassword(), // Hash ya aplicado si corresponde
+            'password' => $user->getPassword(), 
             'email' => $user->getEmail(),
             'phone_number' => $user->getPhoneNumber(),
             'address' => $user->getAddress(),
@@ -24,42 +25,15 @@ class UserAdapter
         ]);
         return $model;
     }
-    public static function toEntity(EloquentUser $model): User
+    public static function toDomain(EloquentUser $model): User
     {
     $data = $model->toArray();
     return User::fromArray($data);
 }
-public static function toDomain(EloquentUser $model): User
-    {
-        return new User(
-            $model->id,
-            new Username($model->username),
-            $model->password,
-            $model->status
-        );
-    }
-    public static function toDomain_(EloquentUser $model): User
-{
-    return User::fromPrimitives([
-        'id' => $model->id,
-        'username' => $model->username,
-        'passwordHash' => $model->password,
-        'status' => $model->status,
-    ]);
-}
 
-public static function loginSuccess($user, string $token): array
-    {
-        return [
-            'status' => true,
-            'message' => 'Login exitoso',
-            'user' => [
-                'id' => $user->getId(),
-                'username' => (string) $user->getUsername(),
-            ],
-            'token' => $token,
-        ];
-    }
+    
+
+
 /*
  public static function toEloquent(User $user): EloquentUser
     {

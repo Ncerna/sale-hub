@@ -1,6 +1,7 @@
 <?php
 namespace Infrastructure\Framework\Middleware;
 use Closure;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 class VerifySignature
 {
@@ -9,10 +10,9 @@ class VerifySignature
 
     public function handle(Request $request, Closure $next)
     {
-        $signature = $request->header('X-Signature');
+        $signature = $request->header('Signature');
         $payload = $request->getContent(); // cuerpo raw JSON de la petición
         
-
         if (!$signature || !$this->isValidSignature($payload, $signature)) {
             return response()->json(['error' => 'Firma inválida'], 401);
         }
@@ -23,6 +23,8 @@ class VerifySignature
     private function isValidSignature(string $payload, string $signature): bool
     {
         $computed = hash_hmac('sha256', $payload, $this->secretKey);
+          Log::info('Hash calculado: ' . $computed);
+    Log::info('Hash recibido: ' . $signature);
         return hash_equals($computed, $signature);
     }
 }
