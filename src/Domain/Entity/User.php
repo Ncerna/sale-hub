@@ -21,20 +21,30 @@ class User {
         return get_object_vars($this);
     }
 
-    public static function fromArray(array $data): self {
-        $instance = new self();
-        foreach ($data as $key => $value) {
-            if (property_exists($instance, $key)) {
+public static function fromArray(array $data): self {
+    $instance = new self();
 
-               if ($key === 'role_id' && is_array($value)) {
-                $instance->$key = Role::fromArray($value); 
+    foreach ($data as $key => $value) {
+        if (property_exists($instance, $key)) {
+            // Caso 1: Se estiver vindo o relacionamento 'role' como array
+            if ($key === 'role' && is_array($value)) {
+                $instance->role = Role::fromArray($value);
+                continue;
             }
 
-                $instance->$key = $value;
+            // Caso 2: Se estiver vindo do frontend, só o ID (role_id)
+            if ($key === 'role_id' && is_int($value)) {
+                $instance->role_id = $value;
+                continue;
             }
+
+            $instance->$key = $value;
         }
-        return $instance;
     }
+
+    return $instance;
+}
+
 
     // Getters and Setters
 

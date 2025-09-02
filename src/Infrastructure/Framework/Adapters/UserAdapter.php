@@ -25,7 +25,6 @@ class UserAdapter
     }
     public static function toDomain(EloquentUser $model): User
     {
-        $data = $model->toArray();
-        return User::fromArray($data);
+        return User::fromArray($model->toArray());
     }
 }

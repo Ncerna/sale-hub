@@ -40,20 +40,15 @@ class UserRepository implements IUserRepository
         return $model->save();
     }
 
-    public function findById_6(int $id): ?User
-    {
-        $model = EloquentUser::find($id);
-        return $model ? UserAdapter::toDomain($model) : null;
-    }
-
-    public function findById(int $id): ?User
-    {
+      public function findById(int $id): ?User
+      {
+        // $model = EloquentUser::with('role')->find($id);
         $model = EloquentUser::find($id);
         if (!$model) {
             return null;
         }
-        $data = $model->toArray();
-        return ModelMapper::model_map($data, User::class);
+        $model->setPassword=null;
+       return $model ? UserAdapter::toDomain($model) : null;
     }
 
     public function list(int $page, int $size, ?string $search = null): array
@@ -91,7 +86,7 @@ class UserRepository implements IUserRepository
         $result = [];
 
         foreach ($models as $model) {
-            $result[] = UserAdapter::toDomain($model);
+            $result[] = ModelMapper::model_map($model->toArray(), User::class);
         }
 
         return $result;
@@ -103,7 +98,7 @@ class UserRepository implements IUserRepository
             ->where('status', 1)
             ->first();
 
-        return $model ? UserAdapter::toDomain($model) : null;
+        return $model ? ModelMapper::model_map($model, User::class) : null;
     }
 
     public function findByUsername(string $username): ?User
@@ -112,7 +107,7 @@ class UserRepository implements IUserRepository
             ->where('status', 1)
             ->first();
 
-        return $model ? UserAdapter::toDomain($model) : null;
+        return $model ? ModelMapper::model_map($model, User::class) : null;
     }
 }
 
