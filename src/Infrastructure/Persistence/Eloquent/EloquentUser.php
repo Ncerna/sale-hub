@@ -18,7 +18,7 @@ class EloquentUser extends Model
         'email',
         'phone_number',
         'address',
-        'role_id',      // debe coincidir con el nombre de la columna en la tabla
+        'role_id',    
         'status',
         'path_photo',
         'path_qr'
