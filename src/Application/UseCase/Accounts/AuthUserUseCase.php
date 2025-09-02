@@ -1,5 +1,5 @@
 <?php
-namespace Application\UseCase\User;
+namespace Application\UseCase\User\Accounts;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Domain\IRepository\IUserRepository;
 use Domain\Entity\User;

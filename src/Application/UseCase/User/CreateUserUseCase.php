@@ -14,14 +14,12 @@ class CreateUserUseCase
         $this->userRepo = $userRepo;
         $this->validation = $validationService;
     }
-
     public function execute(UserRequest $UserRequest): User
     {
         $user = User::fromArray($UserRequest->toArray());
         $this->validation->validate($user);
         $password_hash = Password::fromPlainText($user->getPassword());
         $user->setPassword($password_hash->getHash());
-
         return $this->userRepo->save($user);
     }
 

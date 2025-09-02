@@ -1,15 +1,12 @@
 <?php
 namespace Infrastructure\Framework\Adapters;
-
 use Domain\Entity\User;
 use Infrastructure\Persistence\Eloquent\EloquentUser;
-
 class UserAdapter
 {
     public static function toEloquent(User $user, ?EloquentUser $eloquent = null): EloquentUser
     {
         $model = $eloquent ?? new EloquentUser();
-
         $model->fill([
             'id' => $user->getId(),
             'first_name' => $user->getFirstName(),
@@ -24,15 +21,11 @@ class UserAdapter
             'path_photo' => $user->getPathPhoto(),
             'path_qr' => $user->getPathQr(),
         ]);
-
         return $model;
     }
     public static function toDomain(EloquentUser $model): User
     {
-    $data = $model->toArray();
-    return User::fromArray($data);
+        $data = $model->toArray();
+        return User::fromArray($data);
     }
-
-
-
 }

@@ -23,33 +23,44 @@ class UserRequest
         $required = ['first_name', 'last_name', 'username', 'password', 'role_id'];
         foreach ($required as $key) {
             if (!isset($data[$key])) {
-                throw new \InvalidArgumentException("Falta el campo requerido: $key",400);
+                throw new \InvalidArgumentException("Falta el campo requerido: $key", 400);
             }
         }
-        $DTOs = new self();
+        $userRequest = new self();
         foreach ($data as $key => $value) {
-            if (property_exists($DTOs, $key)) {
+            if (property_exists($userRequest, $key)) {
                 if ($key === 'role_id') {
-                 $role = new Role();
-                 $role->setId($value);
-                 $DTOs->setRole($role);
+                    $role = new Role();
+                    $role->setId($value);
+                    $userRequest->setRole($role);
                 }
-                $DTOs->$key = $value;
+                $userRequest->$key = $value;
             }
         }
-        return $DTOs;
+        return $userRequest;
     }
     public function toArray(): array
     {
         return get_object_vars($this);
     }
-       public function getRole(): Role {
+    public function getRole(): Role
+    {
         return $this->role;
     }
-        public function setRole(Role $role): self {
+    public function setRole(Role $role): self
+    {
         $this->role = $role;
         return $this;
-        }
+    }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
 }
 
 

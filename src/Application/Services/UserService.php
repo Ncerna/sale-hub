@@ -4,66 +4,60 @@ use Application\DTOs\UserRequest;
 use Application\Contracts\UserServiceInterface;
 use Application\Contracts\FileManagerInterface;
 use Application\UseCase\User\CreateUserUseCase;
-use Application\UseCase\User\AuthUserUseCase;
 use Application\UseCase\User\UpdateUserUseCase;
-
-/*use Application\UseCase\DeleteUserUseCase;
-use Application\UseCase\GetUserUseCase;
-use Application\UseCase\ListUsersUseCase;*/
+use Application\UseCase\user\DeleteUserUseCase;
+use Application\UseCase\user\GetUserUseCase;
+/*use Application\UseCase\ListUsersUseCase;*/
 use Domain\Entity\User;
 
 class UserService implements UserServiceInterface {
     private CreateUserUseCase $create;
-    private AuthUserUseCase $AuthUserUseCase;
     private UpdateUserUseCase $update;
-
     private FileManagerInterface $fileManager;
-    /*private DeleteUserUseCase $delete;
+    private DeleteUserUseCase $delete;
     private GetUserUseCase $get;
-    private ListUsersUseCase $list;*/
+    /*private ListUsersUseCase $list;*/
 
     public function __construct(
         CreateUserUseCase $create,
-        
         UpdateUserUseCase $update,
-       /* DeleteUserUseCase $delete,
+        DeleteUserUseCase $delete,
         GetUserUseCase $get,
-        ListUsersUseCase $list*/
+       /* ListUsersUseCase $list*/
     ) {
         $this->create = $create;
         $this->update = $update;
-       /* $this->delete = $delete;
+        $this->delete = $delete;
         $this->get = $get;
-        $this->list = $list;*/
+       /* $this->list = $list;*/
     }
 
     public function registerUser(array $data): User {
         $userRequest = UserRequest::fromArray($data);
+        $userRequest->setId(null);
         $user = $this->create->execute($userRequest);
-
         if (!empty($data['images'])) {
             $this->fileManager->uploadFiles($user->getId(), $data['images']);
         }
-
-        if (!empty($data['images_to_delete'])) {
-            $this->fileManager->deleteFiles($user->getId(), $data['images_to_delete']);
-        }
-
         return $user;
     }
 
-    public function updateUser(array $data): User {
-        $user = UserRequest::fromArray($data);
-        return $this->update->execute($user);
+    public function updateUser(array $data,int $id): User {
+        $userRequest = UserRequest::fromArray($data);
+         $userRequest->setId($id);
+         if (!empty($data['images_to_delete'])) {
+            $this->fileManager->deleteFiles($$userRequest->getId(), $data['images_to_delete']);
+        }
+        return $this->update->execute($userRequest);
         
     }
-
-    public function deleteUser(string $id): void {
-       // $this->delete->execute($id);
+    public function destroyUser(int $id): bool {
+       return $this->delete->execute($id);
     }
 
-    public function getUser(string $id): ?User {
-       // return $this->get->execute($id);
+    public function getUser(int $id): ?User {
+        return $this->get->execute($id);
+
     }
 
     public function listUsers(): array {

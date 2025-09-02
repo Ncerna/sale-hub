@@ -21,13 +21,13 @@ class UpdateUserUseCase
         $this->validation->validate($user);
         if ($user->getId()) {
             $userBD = $this->userRepo->findById($user->getId());
-            $this->handlePasswordForUpdate($user,$userBD);
-            $this->handlePhotoForUpdate($user,$userBD);
+            $this->setPasswordUser($user,$userBD);
+            $this->setPhotoUser($user,$userBD);
         }
         return $this->userRepo->save($user);
         
     }
-    private function handlePasswordForUpdate(User $user, User $userBD): void
+    private function setPasswordUser(User $user, User $userBD): void
     {
         if (empty($user->getPassword())) {
             $user->setPassword($userBD->getPassword());
@@ -37,10 +37,10 @@ class UpdateUserUseCase
         }
     }
 
-    private function handlePhotoForUpdate(User $user, User $userBD): void
+    private function setPhotoUser(User $user, User $userBD): void
     {
         if (empty($user->getPhoneNumber())) {
-            $user->setPhoneNumber($userBD->getPhoneNumber());
+            $user->setPathPhoto($userBD->getPathPhoto());
         } else {
             // lógica para subir y asignar nueva foto
         }
