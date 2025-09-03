@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentUser extends Model
 {
     protected $table = 'users';
-     protected $primaryKey = 'id';
+    protected $hidden = ['password'];
+
 
     protected $fillable = [
         'id',
@@ -28,5 +29,7 @@ class EloquentUser extends Model
     {
         return $this->belongsTo(EloquentRole::class, 'role_id');
     }
+    
+
 }
 

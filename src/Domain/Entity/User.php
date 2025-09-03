@@ -31,7 +31,6 @@ public static function fromArray(array $data): self {
                 $instance->role = Role::fromArray($value);
                 continue;
             }
-
             // Caso 2: Se estiver vindo do frontend, só o ID (role_id)
             if ($key === 'role_id' && is_int($value)) {
                 $instance->role_id = $value;
