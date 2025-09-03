@@ -9,7 +9,7 @@ use Domain\IRepository\ICategoryAttributeRepository;
 use Infrastructure\Persistence\Repository\CategoryAttributeRepository;
 use Application\Contracts\ProductServiceInterface;
 use Application\Contracts\UserServiceInterface;
-use Application\Services\ProductApplicationService;
+use Application\Services\ProductService;
 use Application\Services\UserService;
 use Domain\IRepository\IProductRepository;
 use Infrastructure\Persistence\Repository\ProductRepository;
@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
     $this->app->bind(ICategoryRepository::class, CategoryRepository::class);
 
 
-    $this->app->bind(ProductServiceInterface::class, ProductApplicationService::class);
+    $this->app->bind(ProductServiceInterface::class, ProductService::class);
     $this->app->bind(UserServiceInterface::class, UserService::class);
     
     /*  |||| REPOSITORIS||||*/

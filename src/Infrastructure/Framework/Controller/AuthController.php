@@ -1,20 +1,24 @@
 <?php
 namespace Infrastructure\Framework\Controller;
-use Application\Contracts\UserServiceInterface;
+use Application\Contracts\AuthServiceInterface;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController 
 {
-     private UserServiceInterface $service;
+     private AuthServiceInterface $service;
 
-    public function __construct(UserServiceInterface $service) {
+    public function __construct(AuthServiceInterface $service) {
         $this->service = $service;
     }
     public function login(Request $request)
     {
-        // Validar datos
+        $validated = $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+    
        $result = $this->service->login($request->input('username'), $request->input('password'));
     return $this->respondWithToken($result['token']);
     }
@@ -28,18 +32,8 @@ class AuthController
         ]);
     }
     public function refresh(Request $request)
-    {
-        try {
-            // Intenta refrescar el token actual. Necesita que el token no esté expirado más allá del refresh_ttl
+    {          
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
-
-            // Devuelve el nuevo token al cliente
-            return response()->json([
-                'token' => $newToken,
-            ]);
-        } catch (JWTException $e) {
-            // Si ocurre error (token no válido o expirado más allá del refresh_ttl)
-            return response()->json(['error' => 'No se pudo refrescar el token'], 401);
-        }
+            return response()->json([   'token' => $newToken, ]);
     }
 }

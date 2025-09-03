@@ -202,7 +202,7 @@ class CreateProductUseCase {
     }
 }
 
-// src/Application/Product/Service/ProductApplicationService.php
+// src/Application/Product/Service/ProductService.php
 namespace Application\Product\Service;
 
 use Domain\IService\ProductService;
@@ -211,7 +211,7 @@ use Domain\ValueObjects\Price;
 use Domain\ValueObjects\IGVRate;
 use Domain\ValueObjects\IGVAffectationCode;
 
-class ProductApplicationService implements ProductService {
+class ProductService implements ProductService {
     private ProductService $productDomainService;
 
     public function __construct(ProductService $productDomainService) {
@@ -442,14 +442,14 @@ class ProductRequestAdapter
 namespace Infrastructure\Framework\Factories;
 
 use Infrastructure\Persistence\Eloquent\ProductRepository;
-use Application\Product\Service\ProductApplicationService;
+use Application\Product\Service\ProductService;
 
 class ProductFactory
 {
-    public static function createService(): ProductApplicationService
+    public static function createService(): ProductService
     {
         $repository = new ProductRepository();
-        return new ProductApplicationService($repository);
+        return new ProductService($repository);
     }
 }
 

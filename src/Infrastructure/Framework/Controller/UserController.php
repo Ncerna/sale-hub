@@ -33,9 +33,11 @@ class UserController
         return $this->service->getUser($id)->toArray();
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return $this->service->listUsers();
+        
+        $products = $this->service->listUsers( $request);
+        return ApiResponse::success($products);
     }
 
 }

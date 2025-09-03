@@ -4,6 +4,7 @@ use Domain\Entity\User;
 use Domain\IRepository\IUserRepository;
 use Infrastructure\Persistence\Eloquent\EloquentUser;
 use Infrastructure\Framework\Adapters\UserAdapter;
+use Infrastructure\Framework\Adapters\ResponsePaginate;
 use Infrastructure\Framework\Adapters\ModelMapper;
 class UserRepository implements IUserRepository
 {
@@ -61,8 +62,6 @@ class UserRepository implements IUserRepository
             ])
             ->select('id', 'first_name', 'last_name', 'username', 'email')
             ->where('status', 1);
-        ;
-
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
@@ -71,8 +70,8 @@ class UserRepository implements IUserRepository
             });
         }
         $paginator = $query->orderBy('id')->paginate($size, ['*'], 'page', $page);
-
-        return $paginator->toArray();
+        return ResponsePaginate::format($paginator);
+        //return $paginator->toArray();
     }
 
     public function findAll(): array

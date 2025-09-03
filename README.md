@@ -39,8 +39,8 @@ package "Application" {
     }
 
     package "Services" {
-        class ProductApplicationService
-        ProductApplicationService ..|> ProductServiceInterface
+        class ProductService
+        ProductService ..|> ProductServiceInterface
     }
 
     package "UseCase" {
@@ -54,11 +54,11 @@ package "Application" {
         CreateProductUseCase --> IProductValidationService
     }
 
-    ProductApplicationService --> CreateProductUseCase
-    ProductApplicationService --> UpdateProductUseCase
-    ProductApplicationService --> DeleteProductUseCase
-    ProductApplicationService --> GetProductUseCase
-    ProductApplicationService --> ListProductUseCase
+    ProductService --> CreateProductUseCase
+    ProductService --> UpdateProductUseCase
+    ProductService --> DeleteProductUseCase
+    ProductService --> GetProductUseCase
+    ProductService --> ListProductUseCase
 }
 
 package "Infrastructure" {
@@ -97,9 +97,9 @@ package "Infrastructure" {
 }
 
 package "Application" {
-  [ProductApplicationService] ..> [ProductServiceInterface] : implements
-  [ProductApplicationService] --> [CreateProductUseCase]
-  [ProductApplicationService] --> [UpdateProductUseCase]
+  [ProductService] ..> [ProductServiceInterface] : implements
+  [ProductService] --> [CreateProductUseCase]
+  [ProductService] --> [UpdateProductUseCase]
   [CreateProductUseCase] --> [IProductRepository]
   [CreateProductUseCase] --> [IProductValidationService]
 }

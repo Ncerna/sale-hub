@@ -56,11 +56,6 @@ class Password
         return $this->hashedPassword;
     }
 
-    /**
-     * No devolver la contraseña en texto plano ni el hash
-     */
-    public function __toString(): string
-    {
-        return '********';
-    }
+   
+    
 }

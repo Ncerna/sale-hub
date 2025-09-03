@@ -1,7 +1,7 @@
 <?php
 namespace Application\Services;
 use Application\Contracts\AuthServiceInterface;
-use Application\UseCase\User\AuthUserUseCase;
+use Application\UseCase\Accounts\AuthUserUseCase;
 
 
 class AuthService implements AuthServiceInterface {
@@ -12,6 +12,6 @@ class AuthService implements AuthServiceInterface {
     }
     public function login(String $username, string $password): array{
             
-        return [];
+        return $this->authUserUseCase->execute($username,$password);
          }
 }

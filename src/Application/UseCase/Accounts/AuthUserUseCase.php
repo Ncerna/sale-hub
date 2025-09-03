@@ -1,9 +1,8 @@
 <?php
-namespace Application\UseCase\User\Accounts;
+namespace Application\UseCase\Accounts;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Domain\IRepository\IUserRepository;
 use Domain\Entity\User;
-use Domain\ValueObject\Username;
 use Carbon\Carbon;
 
 class AuthUserUseCase
@@ -15,7 +14,7 @@ class AuthUserUseCase
         $this->userRepository = $userRepository;
     }
 
-    public function execute(Username $username, string $password): User|array
+    public function execute(String $username, string $password): User|array
     {
         $user = $this->userRepository->findByUsername($username);
 
@@ -30,16 +29,9 @@ class AuthUserUseCase
         if (!$user->validatePassword($password)) {
             throw new \InvalidArgumentException("Contraseña incorrecta");
         }
-          // Expiración en 7 días, por ejemplo
-    $token = JWTAuth::factory()
-        ->setTTL(60 * 24 * 7) // minutos en 7 días
-        ->fromUser($user);
-        return [
-            'user' => $user,
-            'token' => $token,
-        ];
+        $user->setPassword(null);
+        return [ 'user' => $user, 'token' => JWTAuth::factory()->setTTL(60 * 24 * 7)->fromUser($user)];
 
-        //return $user;
     }
     
 }

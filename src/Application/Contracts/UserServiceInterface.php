@@ -1,6 +1,6 @@
 <?php
 namespace Application\Contracts;
-
+use Illuminate\Http\Request;
 use Domain\Entity\User;
 
 interface UserServiceInterface {
@@ -8,6 +8,6 @@ interface UserServiceInterface {
     public function updateUser(array $data, int $id): User;
     public function destroyUser(int $id): bool;
     public function getUser(int $id): ?User;
-    public function listUsers(): array;
+    public function listUsers(Request $request): array;
     
 }

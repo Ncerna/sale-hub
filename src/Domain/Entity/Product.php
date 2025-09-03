@@ -8,7 +8,7 @@ use  Domain\ValueObject\IGVAffectationCode;
 
 class Product
 {
-    private ?string $id= null;
+    private ?int $id= null;
     private string $name;
     private string $code;
     private ?string $barcode;

@@ -2,7 +2,7 @@
 namespace Application\Services;
 
 use Application\Contracts\ProductServiceInterface;
-use Application\UseCase\CreateProductUseCase;
+use Application\UseCase\Product\CreateProductUseCase;
 use Application\UseCase\UpdateProductUseCase;
 use Application\UseCase\DeleteProductUseCase;
 use Application\UseCase\GetProductUseCase;
@@ -13,7 +13,7 @@ use Domain\ValueObject\Price;
 use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
 
-class ProductApplicationService implements ProductServiceInterface
+class ProductService implements ProductServiceInterface
 {
     private CreateProductUseCase $createProductUseCase;
     private UpdateProductUseCase $updateUseCase;

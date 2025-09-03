@@ -1,13 +1,15 @@
 <?php
 namespace Application\Services;
 use Application\DTOs\UserRequest;
+use Application\DTOs\RequestQuery;
+use Illuminate\Http\Request;
 use Application\Contracts\UserServiceInterface;
 use Application\Contracts\FileManagerInterface;
 use Application\UseCase\User\CreateUserUseCase;
 use Application\UseCase\User\UpdateUserUseCase;
 use Application\UseCase\user\DeleteUserUseCase;
 use Application\UseCase\user\GetUserUseCase;
-/*use Application\UseCase\ListUsersUseCase;*/
+use Application\UseCase\user\ListUsersUseCase;
 use Domain\Entity\User;
 
 class UserService implements UserServiceInterface {
@@ -16,20 +18,20 @@ class UserService implements UserServiceInterface {
     private FileManagerInterface $fileManager;
     private DeleteUserUseCase $delete;
     private GetUserUseCase $get;
-    /*private ListUsersUseCase $list;*/
+    private ListUsersUseCase $list;
 
     public function __construct(
         CreateUserUseCase $create,
         UpdateUserUseCase $update,
         DeleteUserUseCase $delete,
         GetUserUseCase $get,
-       /* ListUsersUseCase $list*/
+        ListUsersUseCase $list
     ) {
         $this->create = $create;
         $this->update = $update;
         $this->delete = $delete;
         $this->get = $get;
-       /* $this->list = $list;*/
+        $this->list = $list;
     }
 
     public function registerUser(array $data): User {
@@ -60,9 +62,10 @@ class UserService implements UserServiceInterface {
 
     }
 
-    public function listUsers(): array {
-       // return $this->list->execute();
-       return [];
+    public function listUsers(Request $request): array {
+        $queryDto = RequestQuery::fromRequest($request);
+        return $this->list->execute($queryDto);
+       
     }
     
 }
