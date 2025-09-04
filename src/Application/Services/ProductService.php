@@ -3,15 +3,19 @@ namespace Application\Services;
 
 use Application\Contracts\ProductServiceInterface;
 use Application\UseCase\Product\CreateProductUseCase;
-use Application\UseCase\UpdateProductUseCase;
+use Application\UseCase\Product\UpdateProductUseCase;
+use Application\UseCase\Product\ListProductUseCase;
+
 use Application\UseCase\DeleteProductUseCase;
 use Application\UseCase\GetProductUseCase;
-use Application\UseCase\ListProductUseCase;
+
 use Domain\Entity\Product;
 use Domain\Entity\ProductAttribute;
 use Domain\ValueObject\Price;
 use Domain\ValueObject\IGVRate;
 use Domain\ValueObject\IGVAffectationCode;
+use Domain\ValueObject\ModelMapper;
+use Application\DTOs\ProductRequest;
 
 class ProductService implements ProductServiceInterface
 {
@@ -66,12 +70,13 @@ class ProductService implements ProductServiceInterface
     private function mapDataToProduct(array $data): Product
 {
     $attributes = [];
-    foreach (($data['attributes'] ?? []) as $attr) {
-        $attributes[] = new ProductAttribute(
-            $attr['attribute_id'],
-            $attr['value']
-        );
+
+    foreach ($data['attributes'] ?? [] as $attr) {
+        $attributes[] = ProductAttribute::fromArray($attr);
     }
+
+    $product = ModelMapper::model_map($data ,ProductRequest::class);
+    
     $igvRateValue = ($data['igv_rate'] ?? 0) / 100;
     $igvRate = new IGVRate($igvRateValue);
     return new Product(

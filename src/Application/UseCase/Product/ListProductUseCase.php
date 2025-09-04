@@ -1,5 +1,5 @@
 <?php
-namespace Application\UseCase;
+namespace Application\UseCase\Product;
 
 use Domain\IRepository\IProductRepository;
 

@@ -23,7 +23,6 @@ class CreateProductUseCase
             throw new \Exception("Product validation failed");
         }
         
-
         return $this->productRepository->save($product);
     }
 }
