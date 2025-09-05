@@ -67,17 +67,17 @@ class ProductService implements ProductServiceInterface
         return $this->listUseCase->execute($page, $size, $search);
     }
 
-    private function mapDataToProduct(array $data): Product
-{
+    private function mapDataToProduct(array $data): ProductRequest
+   {
     $attributes = [];
-
     foreach ($data['attributes'] ?? [] as $attr) {
         $attributes[] = ProductAttribute::fromArray($attr);
     }
-
-    $product = ModelMapper::model_map($data ,ProductRequest::class);
+    $productdto = ProductRequest::fromArray($data);
+    $productdto->setAttributes($attributes);
+    return $productdto;
     
-    $igvRateValue = ($data['igv_rate'] ?? 0) / 100;
+    /*$igvRateValue = ($data['igv_rate'] ?? 0) / 100;
     $igvRate = new IGVRate($igvRateValue);
     return new Product(
         $data['id'] ?? null,
@@ -100,7 +100,7 @@ class ProductService implements ProductServiceInterface
         $data['branch_id'] ?? null,
         $data['warehouse_id'] ?? null,
         $attributes
-    );
+    );*/
 }
 
 }
