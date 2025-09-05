@@ -6,7 +6,7 @@ use Domain\Entity\CategoryAttribute;
 class Category
 {
     private ?int $id;
-    private int $familyId;
+    private int $family_id;
     private string $name;
     private ?string $photo;
     private ?string $description;
@@ -27,7 +27,7 @@ class Category
 
     // getters y métodos para actualizar propiedades y para atributos
     public function getId(): ?int { return $this->id; }
-    public function getFamilyId(): int { return $this->familyId; }
+    public function getFamilyId(): int { return $this->family_id; }
     public function getName(): string { return $this->name; }
     public function getPhoto(): ?string { return $this->photo; }
     public function getDescription(): ?string { return $this->description; }

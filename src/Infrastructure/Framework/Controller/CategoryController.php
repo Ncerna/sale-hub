@@ -1,23 +1,25 @@
 <?php
 namespace Infrastructure\Framework\Controller;
 
-use Application\DTOs\CategoryDTO;
-use Application\DTOs\CategoryAttributeDTO;
-use Application\UseCase\CreateCategoryUseCase;
-use Illuminate\Http\Request;
 
+use Application\Contracts\CategoryServiceInterface;
+use Illuminate\Http\Request;
+use Infrastructure\Framework\Adapters\ApiResponse;
 class CategoryController
 {
-    private CreateCategoryUseCase $createCategoryUseCase;
+    private CategoryServiceInterface $categoryServiceInterface;
 
-    public function __construct(CreateCategoryUseCase $createCategoryUseCase)
+    public function __construct(CategoryServiceInterface $categoryServiceInterface)
     {
-        $this->createCategoryUseCase = $createCategoryUseCase;
+        $this->categoryServiceInterface = $categoryServiceInterface;
     }
 
     public function store(Request $request)
     {
-        $attributesDTO = [];
+        $category = $this->categoryServiceInterface->registeCategory($request->all());
+        return ApiResponse::success($category, 'User registered successfully');
+
+       /* $attributesDTO = [];
         foreach ($request->input('attributes', []) as $attr) {
             $attributesDTO[] = new CategoryAttributeDTO(
                 null,
@@ -44,6 +46,11 @@ class CategoryController
             return response()->json(['status' => 'success', 'data' => $category]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-        }
+        }*/
+    }
+    public function update(Request $request, int $id)
+    {
+        $category = $this->categoryServiceInterface->updateCategory($request->all(), $id);
+        return ApiResponse::success($category, 'User update successfully');
     }
 }

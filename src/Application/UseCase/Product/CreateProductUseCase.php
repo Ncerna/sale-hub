@@ -26,12 +26,13 @@ class CreateProductUseCase
     {
 
        $product = ModelMapper::model_map($productRequestdto->toArray(), Product::class);
-      
        $preci_unit = new Price($productRequestdto->unit_price,new IGVRate($productRequestdto->igv_rate));
+
        $product->setUnitPrice($preci_unit);
-       
-       $product->setOfferPrice($productRequestdto->offer_price !== null ?
-        new Price($productRequestdto->offer_price,new IGVRate($productRequestdto->igv_rate)) : null);
+       $preci_offer = $productRequestdto->offer_price !== null ?
+       new Price($productRequestdto->offer_price,new IGVRate($productRequestdto->igv_rate)) : null;
+
+       $product->setOfferPrice($preci_offer);
        $product->setIgvRate(new IGVRate($productRequestdto->igv_rate));
        $product->setIgvAffectationCode(new IGVAffectationCode($productRequestdto->igv_affectation_code));
         

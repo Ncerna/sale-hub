@@ -5,7 +5,7 @@ use Domain\Entity\Product;
 use Domain\IService\IProductValidationService;
 use Domain\IService\IProductAttributeService;
 
-class ProductValidationServiceImplementation implements IProductValidationService
+class ProductValidationService implements IProductValidationService
 {
     private IProductAttributeService $attributeService;
 
