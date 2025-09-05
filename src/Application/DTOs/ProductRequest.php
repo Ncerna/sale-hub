@@ -15,7 +15,7 @@ class ProductRequest
     public string $igv_affectation_code;
 
     public int $stock;
-    public int $minimum_stock;
+    public ?int $minimum_stock = null;
     public ?string $photo = null;
 
     public ?int $product_type_id = null;
@@ -39,17 +39,15 @@ public function setAttributes(array $attributes): void { $this->attributes = $at
 public function addAttribute(array $attribute): void {
     $this->attributes[] = $attribute;
 }
-public static function fromArray(array $data): self
-{
-    $instance = new self();
-    foreach ($data as $key => $value) {
-        $method = 'set' . str_replace('_', '', ucwords($key, '_'));
-        if (method_exists($instance, $method)) {
-            $instance->$method($value);
+ public static function fromArray(array $data): self {
+        $instance = new self();
+        foreach ($data as $key => $value) {
+            if (property_exists($instance, $key)) {
+                $instance->$key = $value;
+            }
         }
+        return $instance;
     }
-    return $instance;
-}
 public function toArray(): array
 {
     return get_object_vars($this);

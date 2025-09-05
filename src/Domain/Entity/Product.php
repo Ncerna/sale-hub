@@ -20,10 +20,11 @@ class Product
     private IGVAffectationCode $igv_affectation_code;
 
     private int $stock;
-    private int $minimum_stock;
+    private ?int $minimum_stock=null;
+
     private ?string $photo;
     
-    private ?int $product_type_id;
+    private ?int $product_type_id=null;
     private ?int $provider_id;
     private ?int $units_measure_id;
     
@@ -68,15 +69,15 @@ class Product
     public function getStock(): int { return $this->stock; }
     public function setStock(int $stock): void { $this->stock = $stock; }
     
-    public function getMinimumStock(): int { return $this->minimum_stock; }
-    public function setMinimumStock(int $minimum_stock): void { $this->minimum_stock = $minimum_stock; }
+    public function getMinimumStock(): ?int { return $this->minimum_stock; }
+    public function setMinimumStock(?int $minimum_stock): void { $this->minimum_stock = $minimum_stock; }
+    public function getProductTypeId(): ?int { return $this->product_type_id; }
+    public function setProductTypeId(?int $product_type_id): void { $this->product_type_id = $product_type_id; }
     
     public function getPhoto(): ?string { return $this->photo; }
     public function setPhoto(?string $photo): void { $this->photo = $photo; }
     
-    public function getProductTypeId(): ?int { return $this->product_type_id; }
-    public function setProductTypeId(?int $product_type_id): void { $this->product_type_id = $product_type_id; }
-    
+ 
     public function getProviderId(): ?int { return $this->provider_id; }
     public function setProviderId(?int $provider_id): void { $this->provider_id = $provider_id; }
     
