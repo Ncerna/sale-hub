@@ -1,7 +1,7 @@
 <?php
 namespace Application\Services;
 use Application\Contracts\AuthServiceInterface;
-use Application\UseCase\Accounts\AuthUserUseCase;
+use Application\UseCase\Account\AuthUserUseCase;
 
 
 class AuthService implements AuthServiceInterface {

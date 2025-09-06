@@ -21,10 +21,7 @@ class CategoryRepository implements ICategoryRepository
         $eloquent->save();
 
         if (!$category->getId()) {
-            $reflection = new \ReflectionClass($category);
-            $property = $reflection->getProperty('id');
-            $property->setAccessible(true);
-            $property->setValue($category, $eloquent->id);
+            $category->setId($eloquent->id);
         }
     }
 

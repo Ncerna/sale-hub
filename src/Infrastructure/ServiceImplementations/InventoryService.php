@@ -22,4 +22,5 @@ class InventoryService
         $this->productRepository->save($product);
         return true;
     }
+    //ainventory https://www.perplexity.ai/search/en-una-arquitectura-hesagonal-9S57jdVrSLOtODS7L7sZSA
 }

@@ -5,68 +5,44 @@ use Application\Contracts\CategoryServiceInterface;
 use Application\UseCase\Category\CreateCategoryUseCase;
 use Application\UseCase\Category\UpdateCategoryUseCase;
 
-use Domain\Entity\CategoryAttribute;
+use Application\DTOs\CategoryAttributeRequest;
 use Application\DTOs\CategoryRequest;
 
 class CategoryService implements CategoryServiceInterface
 {
-    private CreateProductUseCase $createProductUseCase;
-    private UpdateProductUseCase $updateUseCase;
-    private DeleteProductUseCase $deleteUseCase;
-    private GetProductUseCase $getUseCase;
-    private ListProductUseCase $listUseCase;
+    private CreateCategoryUseCase $createUseCase;
+    private UpdateCategoryUseCase $updateUseCase;
+
 
     public function __construct(
-        CreateProductUseCase $createProductUseCase,
-        UpdateProductUseCase $updateUseCase,
-        DeleteProductUseCase $deleteUseCase,
-        GetProductUseCase $getUseCase,
-        ListProductUseCase $listUseCase
+        CreateCategoryUseCase $createUseCase,
+        UpdateCategoryUseCase $updateUseCase, 
+      
     ) {
-        $this->createProductUseCase = $createProductUseCase;
+        $this->createUseCase = $createUseCase;
         $this->updateUseCase = $updateUseCase;
-        $this->deleteUseCase = $deleteUseCase;
-        $this->getUseCase = $getUseCase;
-        $this->listUseCase = $listUseCase;
+    
     }
-
-    public function registerCategory(array $data): array
-    {
-        $product = $this->mapDataToProduct($data);
-        return $this->createProductUseCase->execute($product);
+    public function registeCategory(array $data): array{
+        $category = $this->mapDataToCategory($data);
+        return $this->createUseCase->execute($category);
     }
-
+  
     public function updateCategory( array $data,int $id,): array
     {
         $data['id'] = $id;
-        $product = $this->mapDataToProduct($data);
-        return $this->updateUseCase->execute($product);
+        $category = $this->mapDataToCategory($data);
+        return $this->updateUseCase->execute($category);
     }
 
-    public function deleteProduct(int $id): void
+    private function mapDataToCategory(array $data): CategoryRequest
     {
-        $this->deleteUseCase->execute($id);
+        $categoryDto = CategoryRequest::fromArray($data);
+        $attributes = [];
+        foreach ($categoryDto->getAttributes() as $attrArray) {
+            $attributes[] = CategoryAttributeRequest::fromArray($attrArray);
+        }
+        $categoryDto->setAttributes($attributes);
+        return $categoryDto;
     }
-
-    public function getProduct(int $id): ?Product
-    {
-        return $this->getUseCase->execute($id);
-    }
-
-    public function listAll(int $page, int $size, ?string $search = null): array
-    {
-        return $this->listUseCase->execute($page, $size, $search);
-    }
-
-    private function mapDataToProduct(array $data): ProductRequest
-   {
-    $attributes = [];
-    foreach ($data['attributes'] ?? [] as $attr) {
-        $attributes[] = ProductAttribute::fromArray($attr);
-    }
-    $productdto = ProductRequest::fromArray($data);
-    $productdto->setAttributes($attributes);
-    return $productdto;
-}
-
 }

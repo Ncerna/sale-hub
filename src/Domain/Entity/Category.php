@@ -27,6 +27,10 @@ class Category
 
     // getters y métodos para actualizar propiedades y para atributos
     public function getId(): ?int { return $this->id; }
+    public function setId(?int $id): void {
+        $this->id = $id;
+    }
+    
     public function getFamilyId(): int { return $this->family_id; }
     public function getName(): string { return $this->name; }
     public function getPhoto(): ?string { return $this->photo; }
@@ -40,9 +44,32 @@ class Category
         $this->attributes[] = $attribute;
     }
 
-    public function updateName(string $name): void
-    {
+    public function setFamilyId(int $family_id): void {
+        $this->family_id = $family_id;
+    }
+    
+    public function setName(string $name): void {
         $this->name = $name;
     }
+    
+    public function setPhoto(?string $photo): void {
+        $this->photo = $photo;
+    }
+    
+    public function setDescription(?string $description): void {
+        $this->description = $description;
+    }
+    
+    public function setStatus(int $status): void {
+        $this->status = $status;
+    }
+    
+    /**
+     * @param CategoryAttribute[] $attributes
+     */
+    public function setAttributes(array $attributes): void {
+        $this->attributes = $attributes;
+    }
+    
     // más métodos según necesidad...
 }

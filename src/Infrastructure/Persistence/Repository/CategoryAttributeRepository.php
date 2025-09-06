@@ -6,7 +6,7 @@ use Infrastructure\Persistence\Eloquent\EloquentCategoryAttribute;
 use Domain\IRepository\ICategoryAttributeRepository;
 class CategoryAttributeRepository implements ICategoryAttributeRepository
 {
-    public function save(CategoryAttribute $attribute): void
+   /* public function save(CategoryAttribute $attribute): void
     {
         $eloquent = $attribute->getId()
             ? EloquentCategoryAttribute::find($attribute->getId())
@@ -24,6 +24,24 @@ class CategoryAttributeRepository implements ICategoryAttributeRepository
             $property = $reflection->getProperty('id');
             $property->setAccessible(true);
             $property->setValue($attribute, $eloquent->id);
+        }
+    }*/
+    public function save(CategoryAttribute $attribute): void
+    {
+        $eloquent = $attribute->getId()
+            ? EloquentCategoryAttribute::find($attribute->getId())
+            : new EloquentCategoryAttribute();
+
+        $eloquent->category_id = $attribute->getCategoryId();
+        $eloquent->name = $attribute->getName();
+        $eloquent->data_type = $attribute->getDataType();
+        $eloquent->required = $attribute->isRequired();
+        $eloquent->status = $attribute->getStatus();
+
+        $eloquent->save();
+
+        if (!$attribute->getId()) {
+            $attribute->setId($eloquent->id);
         }
     }
 
@@ -58,8 +76,14 @@ class CategoryAttributeRepository implements ICategoryAttributeRepository
         return $attributes;
     }
 
-    public function delete(int $id): void
+   /* public function delete(int $id): void
     {
         EloquentCategoryAttribute::destroy($id);
+    }*/
+    public function delete(CategoryAttribute $attribute): void
+    {
+        if ($attribute->getId()) {
+            EloquentCategoryAttribute::destroy($attribute->getId());
+        }
     }
 }
