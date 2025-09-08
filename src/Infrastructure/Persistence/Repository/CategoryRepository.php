@@ -13,51 +13,26 @@ class CategoryRepository implements ICategoryRepository
             ? EloquentCategory::find($category->getId())
             : new EloquentCategory();
 
-        $eloquent->family_id = $category->getFamilyId();
-        $eloquent->name = $category->getName();
-        $eloquent->photo = $category->getPhoto();
-        $eloquent->description = $category->getDescription();
-        $eloquent->status = $category->getStatus();
+         $eloquent->fill($category->toArray()); 
         $eloquent->save();
-
         if (!$category->getId()) {
             $category->setId($eloquent->id);
         }
     }
 
     public function findById(int $id): ?Category
-    {
-        $eloquent = EloquentCategory::find($id);
-        if (!$eloquent) return null;
+{
+    $eloquent = EloquentCategory::find($id);
+    if (!$eloquent) return null;
 
-        // Aquí solo cargamos categoría, los atributos se cargan en repositorio de atributos o caso de uso
-        return new Category(
-            $eloquent->id,
-            $eloquent->family_id,
-            $eloquent->name,
-            $eloquent->photo,
-            $eloquent->description,
-            $eloquent->status,
-            []
-        );
-    }
+    return $this->mapToDomain($eloquent);
+}
 
-    public function findAll(): array
-    {
-        $categories = [];
-        foreach (EloquentCategory::all() as $eloquent) {
-            $categories[] = new Category(
-                $eloquent->id,
-                $eloquent->family_id,
-                $eloquent->name,
-                $eloquent->photo,
-                $eloquent->description,
-                $eloquent->status,
-                []
-            );
-        }
-        return $categories;
-    }
+public function findAll(): array
+{
+    return EloquentCategory::all()->map(fn($e) => $this->mapToDomain($e))->all();
+}
+
 
     public function delete(int $id): void
     {
@@ -66,4 +41,21 @@ class CategoryRepository implements ICategoryRepository
      public function findAllPaginated(int $page, int $size, ?string $search): array{
         return [];
      }
+     private function mapToDomain(EloquentCategory $eloquent): Category
+     {
+         $category = new Category();
+     
+         $category->setId($eloquent->id);
+         $category->setFamilyId($eloquent->family_id);
+         $category->setName($eloquent->name);
+         $category->setPhoto($eloquent->photo);
+         $category->setDescription($eloquent->description);
+         $category->setStatus($eloquent->status);
+         $category->setAttributes([]); // los atributos se cargan por otro repositorio
+     
+         return $category;
+     }
+     
+
 }
+

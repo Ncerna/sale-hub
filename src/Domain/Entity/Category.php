@@ -14,7 +14,7 @@ class Category
     /** @var CategoryAttribute[] */
     private array $attributes;
 
-    public function __construct(?int $id, int $famil_id, string $name, ?string $photo, ?string $description, int $status = 1, array $attributes = [])
+   /* public function __construct(?int $id, int $famil_id, string $name, ?string $photo, ?string $description, int $status = 1, array $attributes = [])
     {
         $this->id = $id;
         $this->family_id = $famil_id;
@@ -23,7 +23,7 @@ class Category
         $this->description = $description;
         $this->status = $status;
         $this->attributes = $attributes;
-    }
+    }*/
 
     // getters y métodos para actualizar propiedades y para atributos
     public function getId(): ?int
