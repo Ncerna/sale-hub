@@ -3,26 +3,26 @@ namespace Domain\Entity;
 
 class CategoryAttribute
 {
-    private ?int $id;
-    private int $category_id;
+    private ?int $id = null;
+    private ?int $category_id;
     private string $name;
     private string $data_type;
     private bool $required;
     private int $status;
 
-    public function __construct(?int $id, int $categoryId, string $name, string $dataType, bool $required = false, int $status = 1)
+    public function __construct(?int $id, int $category_id, string $name, string $data_type, bool $required = false, int $status = 1)
     {
         $this->id = $id;
-        $this->categoryId = $categoryId;
+        $this->category_id = $category_id;
         $this->name = $name;
-        $this->dataType = $dataType;
+        $this->data_type = $data_type;
         $this->required = $required;
         $this->status = $status;
     }
 
     // getters y setters
     public function getId(): ?int { return $this->id; }
-    public function getCategoryId(): int { return $this->category_id; }
+    public function getCategoryId(): ?int { return $this->category_id; }
     public function setCategoryId(int $category_id): void { $this->category_id = $category_id; }
     public function getName(): string { return $this->name; }
     public function getDataType(): string { return $this->data_type; }
@@ -47,6 +47,10 @@ class CategoryAttribute
     
     public function setStatus(int $status): void {
         $this->status = $status;
+    }
+     public function toArray(): array
+    {
+        return get_object_vars($this);
     }
     
 }

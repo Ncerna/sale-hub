@@ -19,7 +19,7 @@ class CreateCategoryUseCase
         $this->attributeRepository = $attributeRepository;
     }
 
-    public function execute(CategoryRequest $categoryRequest): array|Category
+    public function execute(CategoryRequest $categoryRequest): Category
     {
       
         $attributes = [];
@@ -28,7 +28,7 @@ class CreateCategoryUseCase
                 null,
                 0, // category_id se asigna luego
                 $attrDTO->name,
-                $attrDTO->dataType,
+                $attrDTO->data_type,
                 $attrDTO->required,
                 $attrDTO->status
             );
@@ -50,5 +50,20 @@ class CreateCategoryUseCase
         }
 
         return $category;
+
+        /*
+        $category = new Category();
+$category->fillFromArray($categoryRequest->toArray());  // Mapea todos los campos básicos
+
+$this->categoryRepository->save($category);
+
+// Luego agrega los atributos (que vienen por separado)
+foreach ($categoryRequest->attributes ?? [] as $attrDTO) {
+    $attr = $this->mapDTOToEntity($attrDTO);
+    $attr->setCategoryId($category->getId());
+    $this->attributeRepository->save($attr);
+    $category->addAttribute($attr);
+}
+*/
     }
 }

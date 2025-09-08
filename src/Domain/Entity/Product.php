@@ -108,13 +108,5 @@ class Product
     }
     
 
-
-    private static array $valueObjectsMap = [
-        'unit_price' => Price::class,
-        'offer_price' => Price::class,
-        'igv_rate' => IGVRate::class,
-        'igv_affectation_code' => IGVAffectationCode::class,
-    ];
-
 }
 
