@@ -6,4 +6,8 @@ class EloquentCategoryAttribute extends Model
     protected $table = 'category_attributes';
     protected $fillable = ['category_id', 'name', 'data_type', 'required', 'status'];
     public $timestamps = true;
+    public function category()
+    {
+        return $this->belongsTo(EloquentCategory::class);
+    }
 }

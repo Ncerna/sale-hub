@@ -20,6 +20,23 @@ class UpdateCategoryUseCase
         $this->categoryRepository = $categoryRepository;
         $this->attributeRepository = $attributeRepository;
     }
+   /* public function execute(CategoryRequest $categoryRequest): Category{
+
+        $category = $this->categoryRepository->findById($categoryRequest->id);
+
+        if (!$category) {
+            throw new \Exception("Category with ID {$categoryRequest->id} not found.");
+        }
+        $category->fillFromArray($categoryRequest->toArray());
+
+        $attributesInput =  $categoryRequest->attributes ?? [];
+        $attributesIds = collect($attributesInput)->pluck('id')->filter()->toArray();
+        $category->getAttributes()->whereNotIn('id', $attributesIds)->delete();
+
+    }*/
+
+    
+
     public function execute(CategoryRequest $categoryRequest): Category
     {
         $category = $this->loadCategory($categoryRequest);
@@ -108,71 +125,6 @@ private function removeDeletedAttributes(Category $category, array $existing, ar
 }
 
 
-
-
-
-    /*public function execute(CategoryRequest $categoryRequest): array|Category
-    {
-        $category = $this->categoryRepository->findById($categoryRequest->id);
-        if (!$category) {
-            throw new \Exception("Category with ID {$categoryRequest->id} not found.");
-        }
-        $category->fillFromArray($categoryRequest->toArray());
-        $attributes = $this->attributeRepository->findByCategoryId($categoryRequest->id);
-        foreach ($attributes as $attr) {
-            $category->addAttribute($attr);
-        }
-        $existingAttributes = [];
-        foreach ($category->getAttributes() as $attr) {
-            if ($attr instanceof CategoryAttributeRequest) {
-          
-                $existingAttributes[] = $this->mapDTOToEntity($attr);
-            }
-        }
-        $existingAttributesById = [];
-        foreach ($existingAttributes as $attr) {
-            $existingAttributesById[$attr->getId()] = $attr;
-        }
-
-        $incomingAttributes = $categoryRequest->attributes ?? [];
-        $receivedAttributeIds = [];
-
-     
-        foreach ($incomingAttributes as $attrDTO) {
-            if (isset($attrDTO->id) && isset($existingAttributesById[$attrDTO->id])) {
-                // Actualizar entidad existente
-                $existing = $existingAttributesById[$attrDTO->id];
-                $existing->setName($attrDTO->name);
-                $existing->setDataType($attrDTO->data_type);
-                $existing->setRequired($attrDTO->required);
-                $existing->setStatus($attrDTO->status);
-                $this->attributeRepository->save($existing);
-                $receivedAttributeIds[] = $attrDTO->id;
-            } else {
-                // Crear nueva entidad desde DTO
-                $newAttr = $this->mapDTOToEntity($attrDTO);
-                $newAttr->setCategoryId($category->getId());
-                $this->attributeRepository->save($newAttr);
-                $category->addAttribute($newAttr);
-                if ($newAttr->getId()) {
-                    $receivedAttributeIds[] = $newAttr->getId();
-                }
-            }
-        }
-
- 
-        foreach ($existingAttributes as $attr) {
-            if (!in_array($attr->getId(), $receivedAttributeIds)) {
-                $this->attributeRepository->delete($attr);
-                $category->removeAttribute($attr);
-            }
-        }
-
-        $this->categoryRepository->save($category);
-
-        return $category;
-    }
-*/
     private function mapDTOToEntity(CategoryAttributeRequest $dto): CategoryAttribute
     {
         return new CategoryAttribute(

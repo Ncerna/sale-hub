@@ -7,8 +7,8 @@ class EloquentCategory extends Model
     protected $fillable = ['family_id', 'name', 'photo', 'description', 'status'];
     public $timestamps = true;
 
-    public static function fromRequest(array $data): self
+    public function attributes()
     {
-        return new self($data); // Esto usa mass assignment y requiere $fillable
+        return $this->hasMany(EloquentCategoryAttribute::class);
     }
 }
