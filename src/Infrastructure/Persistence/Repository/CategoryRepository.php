@@ -40,9 +40,7 @@ public function findAll(): array
     {
         EloquentCategory::destroy($id);
     }
-     public function findAllPaginated(int $page, int $size, ?string $search): array{
-        return [];
-     }
+    
      private function mapToDomain(EloquentCategory $eloquent): Category
      {
          $category = new Category();

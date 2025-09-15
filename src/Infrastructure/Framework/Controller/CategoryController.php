@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Framework\Controller;
 
-
 use Application\Contracts\CategoryServiceInterface;
 use Illuminate\Http\Request;
 use Infrastructure\Framework\Adapters\ApiResponse;
@@ -23,14 +22,20 @@ class CategoryController
     public function update(Request $request, int $id)
     {
         $category = $this->categoryServiceInterface->updateCategory($request->all(), $id);
-        return ApiResponse::success($category, 'User update successfully');
+        return ApiResponse::success($category, 'Category update successfully');
     }
-     public function show($id)
+    public function show($id)
     {
         $category = $this->categoryServiceInterface->getCategory($id);
         if (!$category) {
-            return response()->json(['message' => 'Producto no encontrado'], 404);
+            return response()->json(['message' => 'Category no encontrado'], 404);
         }
-        return response()->json($category);
+       return ApiResponse::success($category, 'Category found successfully');
+    }
+    public function destroy($id)
+    {
+        $category = $this->categoryServiceInterface->deleteCategory($id);
+        return ApiResponse::success($category, 'Category delete successfully');
+
     }
 }

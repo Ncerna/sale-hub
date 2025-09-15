@@ -19,7 +19,9 @@ use Infrastructure\Persistence\Repository\UserRepository;
 use Domain\IService\IProductValidationService;
 use Application\Services\ProductValidationService;
 use Domain\IService\IUserValidationService;
+use Domain\IService\ICategoryValidationService;
 use Infrastructure\ServiceImplementations\UserValidationService;
+use Infrastructure\ServiceImplementations\CategoryValidationService;
 
 
 use Illuminate\Support\ServiceProvider;
@@ -51,6 +53,8 @@ class AppServiceProvider extends ServiceProvider
     /*  |||| VALIDATION_ERR||||*/
     $this->app->bind(IProductValidationService::class, ProductValidationService::class);
     $this->app->bind(IUserValidationService::class, UserValidationService::class);
+    $this->app->bind(ICategoryValidationService::class,CategoryValidationService::class
+    );
   }
   /**
    * Bootstrap any application services.

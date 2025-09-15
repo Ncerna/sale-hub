@@ -22,58 +22,69 @@ class CreateCategoryUseCase
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->attributeRepository = $attributeRepository;
-        $this->validationService =$validationService;
+        $this->validationService = $validationService;
     }
 
     public function execute(CategoryRequest $categoryRequest): Category
 {
+    // 1. Crear la categoría (sin atributos aún)
+    $category = ModelMapper::model_map($categoryRequest->toArray(), Category::class);
+    $this->validationService->validate($category);
+    $this->categoryRepository->save($category); // ahora ya tiene un ID
+
     $attributes = [];
+
+    // 2. Crear los atributos y asignar el ID de categoría ya generado
     foreach ($categoryRequest->attributes as $attrDTO) {
-        $attrDTO->setId();
+        $attrDTO->setId(null); // ID nuevo para el atributo
+        $attrDTO->setCategoryId($category->getId()); 
         $attributes[] = $this->mapDTOToEntity($attrDTO);
     }
-    $category= ModelMapper::model_map($categoryRequest->toArray(), Category::class);
+
+    // 3. Asignar los atributos a la categoría
     $category->setAttributes($attributes);
-    $this->categoryRepository->save($category);
+
+    // 4. Guardar cada atributo en el repositorio
     foreach ($category->getAttributes() as $attribute) {
-        $attribute->setCategoryId($category->getId());
         $this->attributeRepository->save($attribute);
     }
+
     return $category;
 }
 
 
-    public function execute_2(CategoryRequest $categoryRequest): Category
+
+   /* public function execute_2(CategoryRequest $categoryRequest): Category
     {
 
-       /* $attributes = [];
-        foreach ($categoryRequest->attributes as $attrDTO) {
-            $attrDTO->setId();
-            $attributes[] = $this->mapDTOToEntity($attrDTO);
-               
-        }
+        /* $attributes = [];
+         foreach ($categoryRequest->attributes as $attrDTO) {
+             $attrDTO->setId();
+             $attributes[] = $this->mapDTOToEntity($attrDTO);
 
-        $category = new Category(
-            null,
-            $categoryRequest->family_id,
-            $categoryRequest->name,
-            $categoryRequest->photo,
-            $categoryRequest->description,
-            $categoryRequest->status,
-            $attributes
-        );
+         }
 
-        $this->categoryRepository->save($category);
-        foreach ($category->getAttributes() as $attribute) {
-            $attribute->setCategoryId($category->getId());
-            $this->attributeRepository->save($attribute);
-        }
+         $category = new Category(
+             null,
+             $categoryRequest->family_id,
+             $categoryRequest->name,
+             $categoryRequest->photo,
+             $categoryRequest->description,
+             $categoryRequest->status,
+             $attributes
+         );
 
-        return $category;
+         $this->categoryRepository->save($category);
+         foreach ($category->getAttributes() as $attribute) {
+             $attribute->setCategoryId($category->getId());
+             $this->attributeRepository->save($attribute);
+         }
 
- */
-return null;
-    }
+         return $category;
+
+  */
+       // return null;
+   // }*/
     private function mapDTOToEntity(CategoryAttributeRequest $dto): CategoryAttribute
     {
         return new CategoryAttribute(
