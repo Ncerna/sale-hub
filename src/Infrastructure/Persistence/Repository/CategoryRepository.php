@@ -46,7 +46,7 @@ public function findAll(): array
          $category = new Category();
      
          $category->setId($eloquent->id);
-         $category->setFamilyId($eloquent->family_id);
+         $category->setFamily_id($eloquent->family_id);
          $category->setName($eloquent->name);
          $category->setPhoto($eloquent->photo);
          $category->setDescription($eloquent->description);

@@ -35,7 +35,7 @@ class Category
         $this->id = $id;
     }
 
-    public function getFamilyId(): ?int
+    public function getFamily_id(): ?int
     {
         return $this->family_id;
     }
@@ -70,7 +70,7 @@ class Category
         $this->attributes = $attributes;
     }
 
-    public function setFamilyId(int $family_id): void
+    public function setFamily_id(int $family_id): void
     {
         $this->family_id = $family_id;
     }
