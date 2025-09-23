@@ -10,5 +10,6 @@ interface ICategoryAttributeRepository
     public function findByCategoryId(int $categoryId): array;
     //public function delete(int $id): void;
     public function delete(CategoryAttribute $attribute): void;
+    public function deleteWhereCategoryIdAndNotIn(int $categoryId,array $attributeIdsToKeep): void;
     
 }

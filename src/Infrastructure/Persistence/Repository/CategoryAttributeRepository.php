@@ -6,26 +6,7 @@ use Infrastructure\Persistence\Eloquent\EloquentCategoryAttribute;
 use Domain\IRepository\ICategoryAttributeRepository;
 class CategoryAttributeRepository implements ICategoryAttributeRepository
 {
-   /* public function save(CategoryAttribute $attribute): void
-    {
-        $eloquent = $attribute->getId()
-            ? EloquentCategoryAttribute::find($attribute->getId())
-            : new EloquentCategoryAttribute();
-
-        $eloquent->category_id = $attribute->getCategoryId();
-        $eloquent->name = $attribute->getName();
-        $eloquent->data_type = $attribute->getDataType();
-        $eloquent->required = $attribute->isRequired();
-        $eloquent->status = $attribute->getStatus();
-        $eloquent->save();
-
-        if (!$attribute->getId()) {
-            $reflection = new \ReflectionClass($attribute);
-            $property = $reflection->getProperty('id');
-            $property->setAccessible(true);
-            $property->setValue($attribute, $eloquent->id);
-        }
-    }*/
+   
     public function save(CategoryAttribute $attribute): void
     {
         $eloquent = $attribute->getId()
@@ -85,5 +66,13 @@ class CategoryAttributeRepository implements ICategoryAttributeRepository
         if ($attribute->getId()) {
             EloquentCategoryAttribute::destroy($attribute->getId());
         }
+    }
+    public function deleteWhereCategoryIdAndNotIn(int $categoryId, array $idsToKeep): void
+    {
+        $query = EloquentCategoryAttribute::where('category_id', $categoryId);
+        if (!empty($idsToKeep)) {
+            $query->whereNotIn('id', $idsToKeep);
+        }
+        $query->delete();
     }
 }

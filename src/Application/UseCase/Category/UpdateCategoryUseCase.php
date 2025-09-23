@@ -5,39 +5,53 @@ use Application\DTOs\CategoryAttributeRequest;
 use Domain\Entity\CategoryAttribute;
 use Domain\Entity\Category;
 use Domain\IRepository\ICategoryRepository;
-
+use Domain\IService\ICategoryValidationService;
 use Domain\IRepository\ICategoryAttributeRepository;
 use Application\DTOs\CategoryRequest;
 class UpdateCategoryUseCase
 {
     private ICategoryRepository $categoryRepository;
     private ICategoryAttributeRepository $attributeRepository;
-
+    private ICategoryValidationService $validationService;
     public function __construct(
         ICategoryRepository $categoryRepository,
-        ICategoryAttributeRepository $attributeRepository
+        ICategoryAttributeRepository $attributeRepository,
+        ICategoryValidationService $validationService
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->attributeRepository = $attributeRepository;
+        $this->validationService = $validationService;
     }
-   /* public function execute(CategoryRequest $categoryRequest): Category{
+    public function execute(Category $category): Category
+    {
+        $this->validationService->validate($category);
 
-        $category = $this->categoryRepository->findById($categoryRequest->id);
+        $updatedCategory = $this->categoryRepository->save($category);
 
-        if (!$category) {
-            throw new \Exception("Category with ID {$categoryRequest->id} not found.");
+        $attributes = $category->getAttributes();
+        $attributeIdsToKeep = [];
+
+        foreach ($attributes as $attribute) {
+            $attribute->setCategoryId($updatedCategory->getId());
+            $this->attributeRepository->save($attribute);
+            if ($attribute->getId() !== null) {
+                $attributeIdsToKeep[] = $attribute->getId();
+            }
         }
-        $category->fillFromArray($categoryRequest->toArray());
 
-        $attributesInput =  $categoryRequest->attributes ?? [];
-        $attributesIds = collect($attributesInput)->pluck('id')->filter()->toArray();
-        $category->getAttributes()->whereNotIn('id', $attributesIds)->delete();
+        $this->attributeRepository->deleteWhereCategoryIdAndNotIn(
+            $updatedCategory->getId(),
+            $attributeIdsToKeep
+        );
 
-    }*/
+        $updatedCategory->setAttributes($attributes);
+
+        return $updatedCategory;
+    }
 
     
 
-    public function execute(CategoryRequest $categoryRequest): Category
+    public function execute_(CategoryRequest $categoryRequest): Category
     {
         $category = $this->loadCategory($categoryRequest);
         $existingAttributes = $this->loadExistingAttributes($category);

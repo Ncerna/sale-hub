@@ -8,10 +8,28 @@ use Application\DTOs\CategoryRequest;
 
 class CategoryRepository implements ICategoryRepository
 {
-    public function save(Category $category): void
+   /* public function save(Category $category): Category
+    {
+        $eloquentCategory = $category->getId()
+            ? EloquentCategory::findOrFail($category->getId())
+            : new EloquentCategory();
+
+        $eloquentCategory->family_id = $category->getFamily_id();
+        $eloquentCategory->name = $category->getName();
+        $eloquentCategory->photo = $category->getPhoto();
+        $eloquentCategory->description = $category->getDescription();
+        $eloquentCategory->status = $category->getStatus();
+
+        $eloquentCategory->save();
+
+        $category->setId($eloquentCategory->id);
+
+        return $category;
+    }*/
+    public function save(Category $category): Category
     {
         $eloquent = $category->getId()
-            ? EloquentCategory::find($category->getId())
+            ?  EloquentCategory::findOrFail($category->getId())
             : new EloquentCategory();
 
          $eloquent->fill($category->toArray()); 
@@ -19,6 +37,7 @@ class CategoryRepository implements ICategoryRepository
         if (!$category->getId()) {
             $category->setId($eloquent->id);
         }
+        return $category;
     }
 
     public function findById(int $id): ?Category
